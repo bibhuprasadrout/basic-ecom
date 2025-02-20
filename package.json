@@ -5,7 +5,7 @@
   "source": "index.html",
   "scripts": {
     "start": "parcel",
-    "build": "tailwindcss -o index.css && parcel build",
+    "build": "parcel build",
     "test": "jest"
   },
   "keywords": [
