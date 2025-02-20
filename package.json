@@ -5,7 +5,7 @@
   "source": "index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build",
+    "build": "tailwindcss -o index.css && parcel build",
     "test": "jest"
   },
   "keywords": [
@@ -16,15 +16,17 @@
   "author": "Bibhu Prasad Rout",
   "license": "ISC",
   "dependencies": {
-    "@tailwindcss/postcss": "^4.0.4",
     "axios": "^1.7.9",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwindcss": "^4.0.4"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.4",
+    "autoprefixer": "^10.4.20",
     "buffer": "^6.0.3",
     "parcel": "^2.13.3",
-    "process": "^0.11.10"
+    "postcss": "^8.5.3",
+    "process": "^0.11.10",
+    "tailwindcss": "^4.0.4"
   }
 }
