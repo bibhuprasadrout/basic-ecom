@@ -36,8 +36,8 @@ const LandingPage = () => {
       );
     }
   };
-  //   const baseUrl = process.env.REACT_APP_BASE_URL;
-  const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+  // const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
   const fetchCategoryLength = async () => {
     if (totalLength > 0 && allCategoriesLength === totalLength) return;
     setStatus(FETCH_STATUS.LOADING);
