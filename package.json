@@ -2,7 +2,7 @@
   "name": "basic-ecom",
   "version": "1.0.0",
   "description": "This is a simple ecommerce toy application that I am developing to explore and practice the various aspects of a full stck application.",
-  "source": "public/index.html",
+  "source": "index.html",
   "scripts": {
     "start": "parcel",
     "build": "parcel build",
