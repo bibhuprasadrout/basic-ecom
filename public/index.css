@@ -1,0 +1,38 @@
+@import "tailwindcss";
+/* Scrollbar width */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+/* Scrollbar Track (Background) */
+::-webkit-scrollbar-track {
+  background: transparent; /* Dark Gray */
+}
+
+/* Hide scrollbar arrows */
+::-webkit-scrollbar-button {
+  display: none;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  /* background: transparent; */
+}
+
+/* Scrollbar handle (thumb) */
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 24, 40, 0.7); /* Slightly visible thumb */
+  border-radius: 50px; /* Fully rounded */
+}
+
+/* Hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 24, 40, 0.9); /* More visible on hover */
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 24, 40, 0.7) transparent;
+  /* scrollbar-button: transparent; */
+}
