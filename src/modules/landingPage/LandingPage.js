@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import CategoryCard from "../../components/cards/CategoryCard";
 import Navbar from "../../components/navbar/Navbar";
-import axios from "axios";
 import { FETCH_STATUS } from "../../config/status";
 import { VIEWPORT_VAL } from "../../config/viewPortVidth";
+import { fetchCategoriesList, fetchCategoryLength } from "../../api/apiList";
 
 const LandingPage = () => {
   const [allCategoriesLength, setAllCategoriesLength] = useState(0);
@@ -14,7 +14,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     calculateSectionItemLength();
-    fetchCategoryLength();
+    handleCategoryLength();
   }, []);
 
   const loading = status === FETCH_STATUS.LOADING;
@@ -36,14 +36,12 @@ const LandingPage = () => {
       );
     }
   };
-  const baseUrl = process.env.REACT_APP_BASE_URL;
-  // const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
-  const fetchCategoryLength = async () => {
+
+  const handleCategoryLength = async () => {
     if (totalLength > 0 && allCategoriesLength === totalLength) return;
     setStatus(FETCH_STATUS.LOADING);
     try {
-      const response = await axios.get(baseUrl);
-      const res = response.data;
+      const res = await fetchCategoryLength();
       setTotalLength(res?.categoriesLength);
       setStatus(FETCH_STATUS.SUCCESS);
     } catch (err) {
@@ -51,16 +49,15 @@ const LandingPage = () => {
       console.log("Error fetching data:", err.message);
     }
   };
-  const fetchCategoriesList = async () => {
+
+  const handleCategoriesList = async () => {
     setStatus(FETCH_STATUS.LOADING);
     try {
-      const response = await axios.get(baseUrl, {
-        params: {
-          skipItems: allCategoriesLength,
-          fetchItems: sectionItemLength,
-        },
-      });
-      const res = response?.data?.categories;
+      paramsObj = {
+        skipItems: allCategoriesLength,
+        fetchItems: sectionItemLength,
+      };
+      const res = await fetchCategoriesList(paramsObj);
       !allCategoriesLength
         ? setAllCategoriesLength(res.length)
         : setAllCategoriesLength((len) => len + res.length);
@@ -82,7 +79,7 @@ const LandingPage = () => {
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        fetchCategoriesList();
+        handleCategoriesList();
       }
     });
     if (node) observer.current.observe(node);

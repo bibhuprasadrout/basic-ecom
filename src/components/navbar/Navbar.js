@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 const Navbar = () => {
   return (
     <>
@@ -23,17 +25,18 @@ const Navbar = () => {
 
             <ul className='flex space-x-6'>
               <li>
-                <a href='#' className='hover:text-gray-400'>
+                <Link to={"/login"} className='hover:text-gray-700'>
                   Sign In
-                </a>
+                </Link>
+                {/* <a href='#' className='hover:text-gray-700'></a> */}
               </li>
               <li>
-                <a href='#' className='hover:text-gray-400'>
+                <a href='#' className='hover:text-gray-700'>
                   Sign Up
                 </a>
               </li>
               <li>
-                <a href='#' className='hover:text-gray-400'>
+                <a href='#' className='hover:text-gray-700'>
                   Cart
                 </a>
               </li>
