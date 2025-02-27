@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const baseUrl = process.env.REACT_APP_BASE_URL;
-const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
+const baseUrl = process.env.REACT_APP_BASE_URL;
+// const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
 
 const handleCatch = (error) => {
   if (!error.response) {
