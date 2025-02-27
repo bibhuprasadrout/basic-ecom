@@ -53,7 +53,7 @@ const LandingPage = () => {
   const handleCategoriesList = async () => {
     setStatus(FETCH_STATUS.LOADING);
     try {
-      paramsObj =
+      const paramsObj =
         {
           skipItems: allCategoriesLength,
           fetchItems: sectionItemLength,
