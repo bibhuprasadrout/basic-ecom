@@ -4,10 +4,10 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const login = (userData) => {
+  const signin = (userData) => {
     setUser(userData);
   };
-  const logout = () => {
+  const signout = () => {
     setUser(null);
   };
 
@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   }, [user]);
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, signin, signout }}>
       {children}
     </UserContext.Provider>
   );

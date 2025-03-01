@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
-import App from "./App";
-import LoginPage from "./modules/login/LoginPage";
 import { UserProvider, useUser } from "./contexts/UserContext";
 import ProtectedPage from "./ProtectedPage";
-import { useEffect } from "react";
+import SignInPage from "./modules/signin/SignInPage";
+import SignUpPage from "./modules/signup/SignUpPage";
+import LandingPage from "./modules/landingPage/LandingPage";
+import Navbar from "./components/navbar/Navbar";
 const AppRoutes = () => {
   const ProtectedRoute = ({ children }) => {
     const { user } = useUser() || {};
@@ -12,9 +13,11 @@ const AppRoutes = () => {
   return (
     <UserProvider>
       <BrowserRouter>
+        <Navbar />
         <Routes>
-          <Route path='/' element={<App />} />
-          <Route path='/login' element={<LoginPage />} />
+          <Route path='/' element={<LandingPage />} />
+          <Route path='/signin' element={<SignInPage />} />
+          <Route path='/signup' element={<SignUpPage />} />
           <Route
             path='/protected'
             element={

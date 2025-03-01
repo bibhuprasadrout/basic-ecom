@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import CategoryCard from "../../components/cards/CategoryCard";
-import Navbar from "../../components/navbar/Navbar";
 import { FETCH_STATUS } from "../../config/status";
 import { VIEWPORT_VAL } from "../../config/viewPortVidth";
 import { fetchCategoriesList, fetchCategoryLength } from "../../api/apiList";
@@ -46,7 +45,6 @@ const LandingPage = () => {
       setStatus(FETCH_STATUS.SUCCESS);
     } catch (err) {
       setStatus(FETCH_STATUS.ERROR);
-      console.log("Error fetching data:", err.message);
     }
   };
 
@@ -89,7 +87,6 @@ const LandingPage = () => {
   return (
     <>
       <div>
-        <Navbar />
         <div className=' bg-cyan-100 h-[50vh] text-center flex flex-col justify-center items-center'>
           <h1 className='text-7xl'>BIG HERO SECTION!</h1>
           <h2 className='text-3xl'>Some grand offer going on.</h2>

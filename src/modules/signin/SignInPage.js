@@ -1,45 +1,46 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { fetchUser } from "../../api/apiList";
 import { useUser } from "../../contexts/UserContext";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
+import ErrorModal from "../../modals/ErrorModal";
 
-const LoginPage = () => {
-  const loginFormRef = useRef();
-  const { login, logout } = useUser() || {};
+const SignInPage = () => {
+  const [error, setError] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const signinFormRef = useRef();
+  const { signin } = useUser() || {};
   const navigate = useNavigate();
 
   const handleUSer = async (event) => {
     event.preventDefault();
-    const form = loginFormRef.current;
+    const form = signinFormRef.current;
     const email = form.elements.email.value;
     const password = form.elements.password.value;
-    try {
-      if (!email || !password) throw new Error();
-      const res = await fetchUser({
-        email: email,
-        password: password,
-      });
-      await login(res?.data?.user?.email);
-      if (!res) throw new Error();
-      navigate("/protected");
-    } catch (err) {
-      if (!email || !password) {
-        alert("Error message: Both email and Password are required.");
-      } else {
-        alert("Error message:", err.message);
-      }
+    const res = await fetchUser({
+      email: email || "",
+      password: password || "",
+    });
+    if (!res?.success) {
+      setError(true);
+      setErrMsg(res?.message);
+      return;
     }
+    signin(res?.user);
+    navigate("/protected");
   };
   return (
     <>
       <div>
+        {error && (
+          <ErrorModal message={errMsg} onClose={() => setError(false)} />
+        )}
         <div className='flex min-h-screen items-center justify-center bg-white'>
           <div className='w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-lg'>
             <h2 className='text-2xl font-bold text-white text-center mb-6'>
-              Login
+              Signin
             </h2>
 
-            <form ref={loginFormRef}>
+            <form ref={signinFormRef}>
               <div className='mb-4'>
                 <label className='block text-gray-400 mb-2'>Email</label>
                 <input
@@ -68,15 +69,15 @@ const LoginPage = () => {
                 type='button'
                 className='w-full p-3 mt-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg'
                 onClick={handleUSer}>
-                Login
+                Signin
               </button>
             </form>
 
             <p className='text-gray-400 text-center mt-4'>
               Don't have an account?{" "}
-              <a href='#' className='text-blue-400'>
+              <Link to={"/signup"} className='text-blue-400'>
                 Sign up
-              </a>
+              </Link>
             </p>
             <p className='text-gray-400 text-center mt-4'>
               Can use any user found in{" "}
@@ -93,4 +94,4 @@ const LoginPage = () => {
     </>
   );
 };
-export default LoginPage;
+export default SignInPage;

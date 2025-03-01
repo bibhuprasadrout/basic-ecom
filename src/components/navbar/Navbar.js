@@ -1,39 +1,38 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Navbar = () => {
   return (
     <>
       <div>
         <nav className='flex items-center justify-between px-7 py-3 bg-gray-900 text-white'>
-          <div className='text-2xl font-bold'>LOGO</div>
+          <Link to={"/"} className='text-2xl font-bold'>
+            LOGO
+          </Link>
           <div className=' flex gap-3 items-center justify-end'>
-            <div className='flex border border-gray-600 rounded-lg overflow-hidden w-96'>
-              <span
-                className='flex px-3 bg-gray-800 
-                    text-gray-400 flex-none'>
-                <i className='fas fa-search justify-center items-center'>0-</i>
-              </span>
+            <div className='flex border border-gray-600 rounded-lg overflow-hidden w-xs'>
               <input
                 type='text'
                 placeholder='Search...'
                 className='grow w-full p-2 bg-gray-800 text-white focus:outline-none'
               />
-              <button className='flex-none px-4 py-2 bg-blue-600 hover:bg-blue-700'>
-                Search
-              </button>
+              <span
+                className='flex px-3 bg-gray-800 
+                    text-gray-400 border-l border-gray-600 justify-center items-center flex-none'>
+                <i className='justify-center items-center'>&#128269;</i>
+              </span>
             </div>
 
             <ul className='flex space-x-6'>
               <li>
-                <Link to={"/login"} className='hover:text-gray-700'>
+                <Link to={"/signin"} className='hover:text-gray-700'>
                   Sign In
                 </Link>
                 {/* <a href='#' className='hover:text-gray-700'></a> */}
               </li>
               <li>
-                <a href='#' className='hover:text-gray-700'>
+                <Link to={"/signup"} className='hover:text-gray-700'>
                   Sign Up
-                </a>
+                </Link>
               </li>
               <li>
                 <a href='#' className='hover:text-gray-700'>
@@ -48,9 +47,8 @@ const Navbar = () => {
           <div className=' flex gap-3 items-center justify-end'>
             <ul className='flex space-x-6'>
               <li>
-                <span>0-</span>
                 <a href='#' className='hover:text-gray-400'>
-                  all categories
+                  All categories
                 </a>
               </li>
               <li>

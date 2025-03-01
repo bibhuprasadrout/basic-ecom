@@ -1,14 +1,14 @@
 import { useUser } from "./contexts/UserContext";
 
 const ProtectedPage = () => {
-  const { logout } = useUser();
-  const handleLogout = () => {
-    logout();
+  const { Signout } = useUser();
+  const handleSignout = () => {
+    Signout();
   };
   return (
     <>
       <div>This page is protected.</div>
-      <button onClick={handleLogout}>logout</button>
+      <button onClick={handleSignout}>Signout</button>
     </>
   );
 };

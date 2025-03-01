@@ -1,8 +1,12 @@
+import Navbar from "./components/navbar/Navbar";
 import LandingPage from "./modules/landingPage/LandingPage";
 const App = () => {
   return (
     <>
-      <LandingPage />
+      <div>
+        <Navbar />
+        <LandingPage />
+      </div>
     </>
   );
 };
