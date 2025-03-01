@@ -1,9 +1,9 @@
 import { useUser } from "./contexts/UserContext";
 
 const ProtectedPage = () => {
-  const { Signout } = useUser();
+  const { signout } = useUser();
   const handleSignout = () => {
-    Signout();
+    signout();
   };
   return (
     <>
