@@ -3,7 +3,7 @@ import { useUser } from "./contexts/UserContext";
 const ProtectedPage = () => {
   const { signout } = useUser();
   const handleSignout = () => {
-    signout();
+    return signout();
   };
   return (
     <>
