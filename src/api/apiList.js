@@ -65,5 +65,7 @@ export const fetchCategoriesList = async (paramsObj) => {
   }
 };
 
+export const fetchProducts = (slug) => apiCall(`products/${slug}`); 
+
 export const fetchUser = (credentials) =>
   apiCall("signin", "POST", credentials);

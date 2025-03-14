@@ -3,6 +3,8 @@ import CategoryCard from "../../components/cards/CategoryCard";
 import { FETCH_STATUS } from "../../config/status";
 import { VIEWPORT_VAL } from "../../config/viewPortVidth";
 import { fetchCategoriesList, fetchCategoryLength } from "../../api/apiList";
+import { Outlet, useNavigate, useParams } from "react-router";
+import ProdByCat from "../products/ProdByCat";
 
 const LandingPage = () => {
   const [allCategoriesLength, setAllCategoriesLength] = useState(0);
@@ -10,6 +12,10 @@ const LandingPage = () => {
   const [totalLength, setTotalLength] = useState(0);
   const [sectionItemLength, setSectionItemLength] = useState(0);
   const [status, setStatus] = useState(FETCH_STATUS.IDLE);
+  const [prodByCat, setProdByCat] = useState(false);
+
+  const navigate = useNavigate();
+  const { slug } = useParams();
 
   useEffect(() => {
     calculateSectionItemLength();
@@ -18,6 +24,7 @@ const LandingPage = () => {
 
   const loading = status === FETCH_STATUS.LOADING;
   const calculateSectionItemLength = () => {
+    // calculating number of items that can be acomotated in a single section/container based on the viewport width.
     if (allCategoriesLength !== 0 && allCategoriesLength === totalLength) {
       setSectionItemLength(0);
     } else {
@@ -37,6 +44,7 @@ const LandingPage = () => {
   };
 
   const handleCategoryLength = async () => {
+    // fetch the number of categories available from backend
     if (totalLength > 0 && allCategoriesLength === totalLength) return;
     setStatus(FETCH_STATUS.LOADING);
     try {
@@ -49,6 +57,7 @@ const LandingPage = () => {
   };
 
   const handleCategoriesList = async () => {
+    //fetch a set number of category card info from backend for a single section/container
     setStatus(FETCH_STATUS.LOADING);
     try {
       const paramsObj =
@@ -84,6 +93,9 @@ const LandingPage = () => {
     if (node) observer.current.observe(node);
   });
 
+  const handleOnClickCategory = (slug) => {
+    navigate(`/${slug}`);
+  };
   return (
     <>
       <div>
@@ -91,28 +103,33 @@ const LandingPage = () => {
           <h1 className='text-7xl'>BIG HERO SECTION!</h1>
           <h2 className='text-3xl'>Some grand offer going on.</h2>
         </div>
-        {allCategoriesLength ? (
-          [...new Set(categoriesBySectionList)].map((section, i) => {
-            return (
-              <div
-                key={i}
-                className='border-2 rounded-xl m-7 p-5 flex justify-between items-center flex-wrap 
-            xl:flex-nowrap
-            gap-5 overflow-x-auto'>
-                {section.map((category) => {
-                  return (
-                    <CategoryCard
-                      title={category?.name}
-                      key={category?._id}
-                      image={category?.image}
-                    />
-                  );
-                })}
-              </div>
-            );
-          })
+        {slug ? (
+          <ProdByCat slug={slug} />
         ) : (
-          <></>
+          <div>
+            {allCategoriesLength ? (
+              [...new Set(categoriesBySectionList)].map((section, i) => {
+                return (
+                  <div
+                    key={i}
+                    className='border-2 rounded-xl m-7 p-5 flex justify-between items-center flex-wrap xl:flex-nowrap gap-5 overflow-x-auto'>
+                    {section.map((category) => {
+                      return (
+                        <CategoryCard
+                          title={category?.name}
+                          key={category?._id}
+                          image={category?.image}
+                          onClick={() => handleOnClickCategory(category?.slug)}
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </div>
         )}
         <div ref={allCategoriesLength < totalLength ? apiCallRef : null}></div>
       </div>
