@@ -18,6 +18,9 @@ const LandingPage = () => {
   const { slug } = useParams();
 
   useEffect(() => {
+    alert(
+      "If the page does not load any data, Please wait for 20 to 30 secs and reload the page. This happens due to the free hosting I am currently using. Thank you for your kindness."
+    );
     calculateSectionItemLength();
     handleCategoryLength();
   }, []);
