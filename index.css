@@ -40,3 +40,13 @@
   scrollbar-color: rgba(16, 24, 40, 0.7) transparent;
   /* scrollbar-button: transparent; */
 }
+
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}

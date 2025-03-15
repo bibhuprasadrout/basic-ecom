@@ -1,71 +1,100 @@
-import { Link, useNavigate } from "react-router";
+import { useState } from "react";
+import { Link } from "react-router"; // Ensure it's "react-router-dom"
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
-      <div>
-        <nav className='flex items-center justify-between px-7 py-3 bg-gray-900 text-white'>
-          <Link to={"/"} className='text-2xl font-bold'>
+      {/* Main Navbar */}
+      <nav className='bg-gray-900 text-white'>
+        <div className='flex justify-between items-center px-6 py-4'>
+          {/* Logo */}
+          <Link to='/' className='text-2xl font-bold'>
             LOGO
           </Link>
-          <div className=' flex gap-3 items-center justify-end'>
-            <div className='flex border border-gray-600 rounded-lg overflow-hidden w-xs'>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className='lg:hidden text-white focus:outline-none text-2xl'
+            aria-label='Toggle Menu'>
+            {isOpen ? "✖" : "☰"}
+          </button>
+
+          {/* Desktop Menu */}
+          <div className='hidden lg:flex items-center gap-6'>
+            {/* Search Bar */}
+            <div className='flex border border-gray-600 rounded-lg overflow-hidden'>
               <input
                 type='text'
                 placeholder='Search...'
-                className='grow w-full p-2 bg-gray-800 text-white focus:outline-none'
+                className='p-2 bg-gray-800 text-white focus:outline-none w-64'
               />
-              <span
-                className='flex px-3 bg-gray-800 
-                    text-gray-400 border-l border-gray-600 justify-center items-center flex-none'>
-                <i className='justify-center items-center'>&#128269;</i>
+              <span className='px-3 bg-gray-800 text-gray-400 border-l border-gray-600 flex items-center'>
+                🔍
               </span>
             </div>
 
+            {/* Nav Links */}
             <ul className='flex space-x-6'>
               <li>
-                <Link to={"/signin"} className='hover:text-gray-700'>
+                <Link to='/signin' className='hover:text-gray-400'>
                   Sign In
                 </Link>
-                {/* <a href='#' className='hover:text-gray-700'></a> */}
               </li>
               <li>
-                <Link to={"/signup"} className='hover:text-gray-700'>
+                <Link to='/signup' className='hover:text-gray-400'>
                   Sign Up
                 </Link>
               </li>
               <li>
-                <a href='#' className='hover:text-gray-700'>
-                  Cart
-                </a>
+                <Link to='/cart' className='hover:text-gray-400'>
+                  Cart 🛒
+                </Link>
               </li>
             </ul>
           </div>
-        </nav>
-        {/* a subset navbar with an icon for 'all categories available list' and 'quick to access' tabs like buy gifts, todays deals */}
-        <nav className='subnav flex items-center justify-start px-11 py-1 bg-amber-400 text-white'>
-          <div className=' flex gap-3 items-center justify-end'>
-            <ul className='flex space-x-6'>
-              <li>
-                <a href='#' className='hover:text-gray-400'>
-                  All categories
-                </a>
-              </li>
-              <li>
-                <a href='#' className='hover:text-gray-400'>
-                  Gifts
-                </a>
-              </li>
-              <li>
-                <a href='#' className='hover:text-gray-400'>
-                  Todays deals!
-                </a>
-              </li>
-            </ul>
+        </div>
+
+        {/* Mobile Menu (Hidden on Large Screens) */}
+        {isOpen && (
+          <div className='lg:hidden flex flex-col space-y-3 bg-gray-800 p-4'>
+            <Link to='/signin' className='hover:text-gray-400'>
+              Sign In
+            </Link>
+            <Link to='/signup' className='hover:text-gray-400'>
+              Sign Up
+            </Link>
+            <Link to='/cart' className='hover:text-gray-400'>
+              Cart 🛒
+            </Link>
           </div>
-        </nav>
-      </div>
+        )}
+      </nav>
+
+      {/* Sub Navbar */}
+      <nav className='bg-amber-400 text-white px-6 py-2'>
+        <ul className='flex justify-start space-x-6 overflow-x-auto no-scrollbar'>
+          <li>
+            <a href='#' className='hover:text-gray-700 whitespace-nowrap'>
+              All Categories
+            </a>
+          </li>
+          <li>
+            <a href='#' className='hover:text-gray-700 whitespace-nowrap'>
+              Gifts 🎁
+            </a>
+          </li>
+          <li>
+            <a href='#' className='hover:text-gray-700 whitespace-nowrap'>
+              Today's Deals 🔥
+            </a>
+          </li>
+        </ul>
+      </nav>
     </>
   );
 };
+
 export default Navbar;
