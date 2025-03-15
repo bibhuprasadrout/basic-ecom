@@ -18,9 +18,9 @@ const LandingPage = () => {
   const { slug } = useParams();
 
   useEffect(() => {
-    alert(
-      "If the page does not load any data, Please wait for 20 to 30 secs and reload the page. This happens due to the free hosting I am currently using. Thank you for your kindness."
-    );
+    // alert(
+    //   "If the page does not load any data, Please wait for 20 to 30 secs and reload the page. This happens due to the free hosting I am currently using. Thank you for your kindness."
+    // );
     calculateSectionItemLength();
     handleCategoryLength();
   }, []);
@@ -102,14 +102,14 @@ const LandingPage = () => {
   return (
     <>
       <div>
-        <div className=' bg-cyan-100 h-[50vh] text-center flex flex-col justify-center items-center'>
-          <h1 className='text-7xl'>BIG HERO SECTION!</h1>
-          <h2 className='text-3xl'>Some grand offer going on.</h2>
-        </div>
         {slug ? (
           <ProdByCat slug={slug} />
         ) : (
           <div>
+            <div className=' bg-cyan-100 h-[50vh] text-center flex flex-col justify-center items-center'>
+              <h1 className='text-7xl'>BIG HERO SECTION!</h1>
+              <h2 className='text-3xl'>Some grand offer going on.</h2>
+            </div>
             {allCategoriesLength ? (
               [...new Set(categoriesBySectionList)].map((section, i) => {
                 return (

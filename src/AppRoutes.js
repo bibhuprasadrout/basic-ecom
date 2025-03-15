@@ -6,6 +6,7 @@ import SignUpPage from "./modules/signup/SignUpPage";
 import LandingPage from "./modules/landingPage/LandingPage";
 import Navbar from "./components/navbar/Navbar";
 import ProdByCat from "./modules/products/ProdByCat";
+import ProductPage from "./modules/products/ProductPage";
 const AppRoutes = () => {
   const ProtectedRoute = ({ children }) => {
     const { user } = useUser() || {};
@@ -17,7 +18,9 @@ const AppRoutes = () => {
         <Navbar />
         <Routes>
           <Route path='/' element={<LandingPage />}>
-            <Route path=':slug' element={<ProdByCat />} />
+            <Route path=':slug' element={<ProdByCat />}>
+              <Route path=':product' element={<ProductPage />} />
+            </Route>
           </Route>
           <Route path='/signin' element={<SignInPage />} />
           <Route path='/signup' element={<SignUpPage />} />

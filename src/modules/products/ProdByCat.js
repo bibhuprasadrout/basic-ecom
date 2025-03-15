@@ -1,50 +1,55 @@
 import { useEffect, useState } from "react";
 import { fetchProducts } from "../../api/apiList";
 import { FETCH_STATUS } from "../../config/status";
-import CategoryCard from "../../components/cards/CategoryCard";
+import ProductListingCard from "./ProductListingCard";
+import { useNavigate, useParams } from "react-router";
+import ProductPage from "./ProductPage";
 
 const ProdByCat = ({ slug }) => {
-  console.log(slug, "slug in comp");
+  const { product } = useParams();
   const [products, setProducts] = useState([]);
-  const [fetchProdStatus, setFetchProdStatus] = useState(FETCH_STATUS.IDLE);
+  const [status, setStatus] = useState(FETCH_STATUS.IDLE);
+  const navigate = useNavigate();
   useEffect(() => {
     const handleProducsts = async () => {
-      setFetchProdStatus(FETCH_STATUS.LOADING);
+      setStatus(FETCH_STATUS.LOADING);
       try {
         const prodByCat = await fetchProducts(slug);
         setProducts(prodByCat);
-        setFetchProdStatus(FETCH_STATUS.SUCCESS);
+        console.log(products);
+        setStatus(FETCH_STATUS.SUCCESS);
       } catch (err) {
-        setFetchProdStatus(FETCH_STATUS.ERROR);
+        setStatus(FETCH_STATUS.ERROR);
       }
     };
     handleProducsts();
   }, []);
-  const handleOnClickProduct = () => {
-    console.log("Go to product page.");
+  const handleOnClickProduct = (product) => {
+    navigate(`/${slug}/${product}`);
   };
   return (
     <>
-      {slug ? (
+      {product ? (
+        <ProductPage product={product} />
+      ) : !slug ? (
+        <div>No response!</div>
+      ) : (
         <div>
-          {console.log(products)}
-          <div>
-            <div className='border-2 rounded-xl m-7 p-5 flex justify-between items-center flex-wrap xl:flex-nowrap gap-5 overflow-x-auto'>
-              {products.map((product) => {
-                return (
-                  <CategoryCard
-                    title={product?.title}
-                    key={product?._id}
-                    image={product?.thumbnail}
-                    onClick={() => handleOnClickProduct}
-                  />
-                );
-              })}
-            </div>
+          <div className='flex flex-wrap justify-start items-start'>
+            {products.map((product) => {
+              return (
+                <ProductListingCard
+                  title={product?.title}
+                  price={product?.price}
+                  rating={product?.rating}
+                  key={product?._id}
+                  image={product?.thumbnail}
+                  onClick={() => handleOnClickProduct(product?.title)}
+                />
+              );
+            })}
           </div>
         </div>
-      ) : (
-        <div>No response!</div>
       )}
     </>
   );

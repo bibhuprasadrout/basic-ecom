@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const baseUrl = process.env.REACT_APP_BASE_URL;
-// const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
+// const baseUrl = process.env.REACT_APP_BASE_URL;
+const baseUrl = process.env.REACT_APP_BASE_URL_LOCAL;
 
 const apiCall = async (endpont, method = "GET", data = null, params = {}) => {
   let res;
@@ -65,7 +65,8 @@ export const fetchCategoriesList = async (paramsObj) => {
   }
 };
 
-export const fetchProducts = (slug) => apiCall(`products/${slug}`); 
+export const fetchProducts = (slug) => apiCall(`category/${slug}`);
+export const fetchProductDetails = (product) => apiCall(`${product}`); 
 
 export const fetchUser = (credentials) =>
   apiCall("signin", "POST", credentials);
