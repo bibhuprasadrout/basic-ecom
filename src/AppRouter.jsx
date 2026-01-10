@@ -1,6 +1,6 @@
 // import React from "react";
 import { Provider } from "react-redux";
-import appStore from "./utils/appStore/AppStore";
+import appStore from "./utils/appStore/appStore";
 import { BrowserRouter, Routes, Route } from "react-router";
 import App from "./App";
 import AuthUser from "./modules/Auth/AuthUser";
