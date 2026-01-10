@@ -1,33 +1,34 @@
 {
-  "name": "basic-ecom",
-  "version": "1.0.0",
-  "description": "This is a simple ecommerce toy application that I am developing to explore and practice the various aspects of a full stck application.",
-  "source": "index.html",
+  "name": "basic-ecom-ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build",
-    "test": "jest"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
-  "keywords": [
-    "online",
-    "shopping",
-    "ecommerce"
-  ],
-  "author": "Bibhu Prasad Rout",
-  "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.9",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router": "^7.2.0"
+    "@reduxjs/toolkit": "^2.11.2",
+    "axios": "^1.13.2",
+    "daisyui": "^5.5.14",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.2.0",
+    "react-router": "^7.11.0",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.0.4",
-    "autoprefixer": "^10.4.20",
-    "buffer": "^6.0.3",
-    "parcel": "^2.13.3",
-    "postcss": "^8.5.3",
-    "process": "^0.11.10",
-    "tailwindcss": "^4.0.4"
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.2.1",
+    "cross-env": "^10.1.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "vite": "^5.1.0"
   }
 }
