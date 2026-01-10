@@ -1,0 +1,69 @@
+// import React from "react";
+import { Provider } from "react-redux";
+import appStore from "./utils/appStore/AppStore";
+import { BrowserRouter, Routes, Route } from "react-router";
+import App from "./App";
+import AuthUser from "./modules/Auth/AuthUser";
+import Signin from "./modules/Auth/Signin";
+import Signup from "./modules/Auth/Signup";
+import Product from "./modules/Product";
+import Products from "./modules/Products";
+import Cart from "./modules/Cart";
+import Wishlist from "./modules/Wishlist";
+import Home from "./modules/home/Home";
+import AboutUs from "./modules/legal&CompanyInformation/aboutUs";
+import ContactUs from "./modules/legal&CompanyInformation/contactUs";
+import CopyrightNotice from "./modules/legal&CompanyInformation/copyrightNotice";
+import PrivacyPolicy from "./modules/legal&CompanyInformation/privacyPolicy";
+import RefundPolicy from "./modules/legal&CompanyInformation/refundPolicy";
+import Team from "./modules/legal&CompanyInformation/Team";
+import TermsOfService from "./modules/legal&CompanyInformation/termsOfService";
+import UserProfile from "./modules/userProfile";
+const AppRouter = () => {
+  return (
+    <Provider store={appStore}>
+      <BrowserRouter>
+        <Routes>
+          {/* Home */}
+          <Route path='/' element={<App />}>
+            <Route index element={<Home />} />
+            <Route path='home' element={<Home />} />
+
+            {/* Sign in */}
+            <Route path='signin' element={<Signin />} />
+
+            {/* Sign up */}
+            <Route path='signup' element={<Signup />} />
+
+            {/* Auth for users */}
+            <Route element={<AuthUser />}>
+              <Route path='profile' element={<UserProfile />} />
+
+              {/* Wishlist */}
+              <Route path='wishlist' element={<Wishlist />} />
+            </Route>
+
+            {/* Cart */}
+            <Route path='cart' element={<Cart />} />
+
+            {/* Products and product page */}
+            <Route path='products' element={<Products />} />
+            <Route path=':productId' element={<Product />} />
+
+            {/* Legal and company information */}
+            <Route path='legalAndCompanyInformation'>
+              <Route path='aboutus' element={<AboutUs />} />
+              <Route path='contactus' element={<ContactUs />} />
+              <Route path='copyrightNotice' element={<CopyrightNotice />} />
+              <Route path='privacyPolicy' element={<PrivacyPolicy />} />
+              <Route path='refundPolicy' element={<RefundPolicy />} />
+              <Route path='team' element={<Team />} />
+              <Route path='termsOfService' element={<TermsOfService />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </Provider>
+  );
+};
+export default AppRouter;

@@ -1,0 +1,20 @@
+import { createSlice } from "@reduxjs/toolkit";
+const initialState = {
+  value: [],
+};
+const coategoriesSlice = createSlice({
+  name: "categories",
+
+  initialState,
+
+  reducers: {
+    setCategories: (state, action) => {
+      console.log("Before coategoriesSlice update:", state.value);
+      console.log("Payload of coategoriesSlice received:", action.payload);
+      state.value = action.payload;
+      console.log("After coategoriesSlice update:", state.value);
+    },
+  },
+});
+export const { setCategories } = coategoriesSlice.actions;
+export default coategoriesSlice.reducer;
