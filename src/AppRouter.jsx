@@ -11,14 +11,14 @@ import Products from "./modules/Products";
 import Cart from "./modules/Cart";
 import Wishlist from "./modules/Wishlist";
 import Home from "./modules/home/Home";
-import AboutUs from "./modules/legal&CompanyInformation/aboutUs";
-import ContactUs from "./modules/legal&CompanyInformation/contactUs";
-import CopyrightNotice from "./modules/legal&CompanyInformation/copyrightNotice";
-import PrivacyPolicy from "./modules/legal&CompanyInformation/privacyPolicy";
-import RefundPolicy from "./modules/legal&CompanyInformation/refundPolicy";
+import AboutUs from "./modules/legal&CompanyInformation/AboutUs";
+import ContactUs from "./modules/legal&CompanyInformation/ContactUs";
+import CopyrightNotice from "./modules/legal&CompanyInformation/CopyrightNotice";
+import PrivacyPolicy from "./modules/legal&CompanyInformation/PrivacyPolicy";
+import RefundPolicy from "./modules/legal&CompanyInformation/RefundPolicy";
 import Team from "./modules/legal&CompanyInformation/Team";
-import TermsOfService from "./modules/legal&CompanyInformation/termsOfService";
-import UserProfile from "./modules/userProfile";
+import TermsOfService from "./modules/legal&CompanyInformation/TermsOfService";
+import UserProfile from "./modules/UserProfile";
 const AppRouter = () => {
   return (
     <Provider store={appStore}>
