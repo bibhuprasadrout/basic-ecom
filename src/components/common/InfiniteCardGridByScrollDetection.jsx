@@ -1,7 +1,8 @@
 //  This is a scroll based detection infinite scrolling mechanism.
 import { useEffect, useState, useRef } from "react";
 
-export const InfiniteCardGridByScrollDetection = () => {
+// export const InfiniteCardGridByScrollDetection = () => {
+const InfiniteCardGridByScrollDetection = () => {
   const [visibleCount, setVisibleCount] = useState(10);
   const containerRef = useRef(null);
 
@@ -45,4 +46,4 @@ export const InfiniteCardGridByScrollDetection = () => {
   );
 };
 
-// export default InfiniteCardGridByScrollDetection;
+export default InfiniteCardGridByScrollDetection;
