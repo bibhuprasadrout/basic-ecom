@@ -9,10 +9,10 @@ const coategoriesSlice = createSlice({
 
   reducers: {
     setCategories: (state, action) => {
-      console.log("Before coategoriesSlice update:", state.value);
-      console.log("Payload of coategoriesSlice received:", action.payload);
+      // console.log("Before coategoriesSlice update:", state.value);
+      // console.log("Payload of coategoriesSlice received:", action.payload);
       state.value = action.payload;
-      console.log("After coategoriesSlice update:", state.value);
+      // console.log("After coategoriesSlice update:", state.value);
     },
   },
 });

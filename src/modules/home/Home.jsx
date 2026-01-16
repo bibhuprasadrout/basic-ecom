@@ -53,11 +53,29 @@ const Home = () => {
       </div>
 
       {/* Carousel */}
-      <Carousel products={carouselProducts} />
+      <div className='bg-base-300 py-11 w-full'>
+        <div
+          className='text-2xl pb-1
+        sm:text-4xl sm:pb-3
+        md:text-5xl md:pb-7
+        font-bold text-content-base-300 w-fit m-auto '>
+          Best Discounted Products
+        </div>
+        <Carousel products={carouselProducts} />
+      </div>
 
       {/* Categories */}
       {/* <InfiniteCardGridByScrollDetection /> */}
-      <InfiniteCategoriesCardGrid />
+      <div className='bg-base-200 py-11 w-full'>
+        <div
+          className='text-2xl pb-1
+        sm:text-4xl sm:pb-3
+        md:text-5xl md:pb-7
+        font-bold  text-content-base-300 w-fit m-auto'>
+          Categories with Best Discounted
+        </div>
+        <InfiniteCategoriesCardGrid />
+      </div>
     </div>
   );
 };

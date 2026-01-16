@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { leftArror, rightArrow } from "../../assets";
+import { leftArrow, rightArrow } from "../../assets";
 import ProductCard from "./ProductCard";
 
 const Carousel = (carouselProducts) => {
@@ -43,50 +43,103 @@ const Carousel = (carouselProducts) => {
   };
 
   return (
-    <section className='relative bg-amber-100 p-7 w-screen hidden sm:block'>
-      <div className='flex justify-center items-center gap-4 w-[90vw] mx-auto'>
-        {/* Left Arrow */}
-        <a
-          onClick={() => scrollByCards(-2)}
-          className='btn btn-circle text-2xl font-bold outline-none focus:outline-none'>
-          <img
-            src={leftArror}
-            className='opacity-30'
-            alt='left carousel indicator arrow'
-          />
-        </a>
+    <section className='relative w-full'>
+      <div className='w-full flex justify-center items-center'>
+        <div className='w-full'>
+          <div className='flex justify-center items-center gap-2 sm:gap-4 w-full max-w-7xl mx-auto px-2'>
+            {/* Left Arrow */}
+            <a
+              onClick={() => scrollByCards(-2)}
+              className='btn btn-circle bg-base-100 text-2xl font-bold outline-none focus:outline-none'>
+              <img src={leftArrow} className='opacity-30' alt='left' />
+            </a>
 
-        {/* Carousel */}
-        {/* TODO: More features to add fetch cards based on category and discount provided, also further the complexity by adding a price range the user wants to purchase within */}
-        <div
-          ref={carouselRef}
-          className='carousel carousel-center space-x-4 overflow-x-auto scroll-smooth p-3 cursor-grab active:cursor-grabbing select-none'
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}>
-          {products.length > 0 &&
-            products.map((productForCard, index) => (
-              // The cards within the carousel
-              <ProductCard
-                key={productForCard?._id || index}
-                product={productForCard}
-              />
-            ))}
+            {/* Carousel */}
+            <div
+              ref={carouselRef}
+              className='carousel carousel-center overflow-x-auto scroll-smooth py-3 cursor-grab active:cursor-grabbing select-none w-full'
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}>
+              {products.length > 0 &&
+                products.map((productForCard, index) => (
+                  <ProductCard
+                    key={productForCard?._id || index}
+                    product={productForCard}
+                  />
+                ))}
+            </div>
+
+            {/* Right Arrow */}
+            <a
+              onClick={() => scrollByCards(2)}
+              className='btn btn-circle bg-base-100 text-2xl font-bold outline-none focus:outline-none grayscale-100'>
+              <img src={rightArrow} className='opacity-30' alt='right' />
+            </a>
+          </div>
         </div>
-
-        {/* Right Arrow */}
-        <a
-          onClick={() => scrollByCards(2)}
-          className='btn btn-circle text-2xl font-bold outline-none focus:outline-none grayscale-100'>
-          <img
-            src={rightArrow}
-            className='opacity-30'
-            alt='right carousel indicator arrow'
-          />
-        </a>
       </div>
     </section>
+    // <section className='relative w-full'>
+    //   {/* <div className='w-full flex justify-center items-center'>
+    //     <div className='transform scale-50 origin-top w-full'> */}
+    //   <div className='flex justify-center items-center gap-4 w-[calc(100%-8px)] max-w-480 mx-auto'>
+    //     {/* Left Arrow */}
+    //     <a
+    //       onClick={() => scrollByCards(-2)}
+    //       className='btn btn-circle text-2xl font-bold outline-none focus:outline-none'>
+    //       <img
+    //         src={leftArror}
+    //         className='opacity-30'
+    //         alt='left carousel indicator arrow'
+    //       />
+    //     </a>
+
+    //     {/* Carousel */}
+    //     {/* TODO: More features to add fetch cards based on category and discount provided, also further the complexity by adding a price range the user wants to purchase within */}
+    //     {
+    //       // <div class="
+    //       // transform
+    //       // scale-75
+    //       // sm:scale-100
+    //       // hover:scale-110
+    //       // transition-transform
+    //       // duration-300
+    //       // origin-top-left
+    //       // ">
+    //     }
+    //     <div
+    //       ref={carouselRef}
+    //       className='carousel carousel-center overflow-x-auto scroll-smooth py-3 cursor-grab active:cursor-grabbing select-none w-full'
+    //       onMouseDown={handleMouseDown}
+    //       onMouseMove={handleMouseMove}
+    //       onMouseUp={handleMouseUp}
+    //       onMouseLeave={handleMouseLeave}>
+    //       {products.length > 0 &&
+    //         products.map((productForCard, index) => (
+    //           // The cards within the carousel
+    //           <ProductCard
+    //             key={productForCard?._id || index}
+    //             product={productForCard}
+    //           />
+    //         ))}
+    //     </div>
+
+    //     {/* Right Arrow */}
+    //     <a
+    //       onClick={() => scrollByCards(2)}
+    //       className='btn btn-circle text-2xl font-bold outline-none focus:outline-none grayscale-100'>
+    //       <img
+    //         src={rightArrow}
+    //         className='opacity-30'
+    //         alt='right carousel indicator arrow'
+    //       />
+    //     </a>
+    //   </div>
+    //   {/* </div>
+    //   </div> */}
+    // </section>
   );
 };
 

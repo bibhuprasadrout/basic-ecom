@@ -19,51 +19,54 @@ import RefundPolicy from "./modules/legal&CompanyInformation/RefundPolicy";
 import Team from "./modules/legal&CompanyInformation/Team";
 import TermsOfService from "./modules/legal&CompanyInformation/TermsOfService";
 import UserProfile from "./modules/UserProfile";
+import { AuthProvider } from "./providers/Auth/AuthProvider";
 const AppRouter = () => {
   return (
-    <Provider store={appStore}>
-      <BrowserRouter>
-        <Routes>
-          {/* Home */}
-          <Route path='/' element={<App />}>
-            <Route index element={<Home />} />
-            <Route path='home' element={<Home />} />
+    <AuthProvider>
+      <Provider store={appStore}>
+        <BrowserRouter>
+          <Routes>
+            {/* Home */}
+            <Route path='/' element={<App />}>
+              <Route index element={<Home />} />
+              <Route path='home' element={<Home />} />
 
-            {/* Sign in */}
-            <Route path='signin' element={<Signin />} />
+              {/* Sign in */}
+              <Route path='signin' element={<Signin />} />
 
-            {/* Sign up */}
-            <Route path='signup' element={<Signup />} />
+              {/* Sign up */}
+              <Route path='signup' element={<Signup />} />
 
-            {/* Auth for users */}
-            <Route element={<AuthUser />}>
-              <Route path='profile' element={<UserProfile />} />
+              {/* Auth for users */}
+              <Route element={<AuthUser />}>
+                <Route path='profile' element={<UserProfile />} />
 
-              {/* Wishlist */}
-              <Route path='wishlist' element={<Wishlist />} />
+                {/* Wishlist */}
+                <Route path='wishlist' element={<Wishlist />} />
+              </Route>
+
+              {/* Cart */}
+              <Route path='cart' element={<Cart />} />
+
+              {/* Products and product page */}
+              <Route path='products' element={<Products />} />
+              <Route path=':productId' element={<Product />} />
+
+              {/* Legal and company information */}
+              <Route path='legalAndCompanyInformation'>
+                <Route path='aboutus' element={<AboutUs />} />
+                <Route path='contactus' element={<ContactUs />} />
+                <Route path='copyrightNotice' element={<CopyrightNotice />} />
+                <Route path='privacyPolicy' element={<PrivacyPolicy />} />
+                <Route path='refundPolicy' element={<RefundPolicy />} />
+                <Route path='team' element={<Team />} />
+                <Route path='termsOfService' element={<TermsOfService />} />
+              </Route>
             </Route>
-
-            {/* Cart */}
-            <Route path='cart' element={<Cart />} />
-
-            {/* Products and product page */}
-            <Route path='products' element={<Products />} />
-            <Route path=':productId' element={<Product />} />
-
-            {/* Legal and company information */}
-            <Route path='legalAndCompanyInformation'>
-              <Route path='aboutus' element={<AboutUs />} />
-              <Route path='contactus' element={<ContactUs />} />
-              <Route path='copyrightNotice' element={<CopyrightNotice />} />
-              <Route path='privacyPolicy' element={<PrivacyPolicy />} />
-              <Route path='refundPolicy' element={<RefundPolicy />} />
-              <Route path='team' element={<Team />} />
-              <Route path='termsOfService' element={<TermsOfService />} />
-            </Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </Provider>
+          </Routes>
+        </BrowserRouter>
+      </Provider>
+    </AuthProvider>
   );
 };
 export default AppRouter;

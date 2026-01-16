@@ -3,7 +3,7 @@ import { Link } from "react-router";
 const Footer = () => {
   return (
     <footer className='footer sm:footer-vertical bg-neutral text-neutral-content items-center p-4'>
-      <div className='footer sm:footer-horizontal bg-neutral text-neutral-content items-center pt-4 pb-1'>
+      <div className='footer w-[calc(100vw-2rem)] sm:footer-horizontal bg-neutral text-neutral-content items-center pt-4 pb-1'>
         <aside className='grid-flow-col items-center'>
           <div>
             <svg
@@ -23,7 +23,7 @@ const Footer = () => {
             </p>
           </div>
         </aside>
-        <nav className='grid-flow-col gap-4 md:place-self-center md:justify-self-end'>
+        <nav className='grid-flow-col gap-4 md:place-self-center sm:justify-self-end'>
           <a>
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -57,7 +57,7 @@ const Footer = () => {
         </nav>
       </div>
       <div className='footer sm:footer-horizontal footer-center bg-neutral text-neutral-content items-center p-1'>
-        <nav className='grid grid-flow-col gap-7'>
+        <nav className='flex flex-wrap gap-5 justify-center sm:grid sm:grid-flow-col sm:gap-7'>
           <Link to='aboutus' className='link link-hover'>
             About us
           </Link>
