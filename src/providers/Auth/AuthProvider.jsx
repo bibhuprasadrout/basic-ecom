@@ -5,35 +5,40 @@ import { BASE_URL } from "../../config/Constants";
 
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(false);
-  console.log("auth:", auth);
-
-  const validateToken = async (
-    user = {
-      email: "bob@laso.com",
-      password: "Boblaso1!",
+  const [auth, setAuth] = useState(() => {
+    return localStorage.getItem("auth") === "true"; // localstorage only stores string to get a bool we need to coerce it out like this.
+  }); // hydrate from localStorage for instant UX
+  const [loading, setLoading] = useState(true);
+  const validateToken = async () => {
+    try {
+      const res = await axios({
+        method: "get",
+        baseURL: BASE_URL,
+        url: "/auth/profile",
+        withCredentials: true,
+      });
+      const validUser = res.data?.user;
+      setAuth(() => !!validUser);
+      localStorage.setItem("auth", !!validUser);
+      // is the same as
+      // const validUserStatus = res.data?.status;
+      // if (validUserStatus && validUser != null) { setAuth(() => true);
+      // } else { setAuth(() => false); }
+    } catch (err) {
+      setAuth(() => false);
+      localStorage.removeItem("auth");
+    } finally {
+      setLoading(false);
     }
-  ) => {
-    const res = await axios({
-      method: "post",
-      baseURL: BASE_URL,
-      url: "signin",
-      data: user,
-    });
-    console.log("login res:", res.data);
-    const userRes = await axios({
-      method: "get",
-      baseURL: BASE_URL,
-      url: "/auth/profile",
-      credentials: "include",
-    });
-    console.log("login userRes:", userRes.data);
   };
   useEffect(() => {
     validateToken();
   }, []);
+  useEffect(() => {
+    if (auth == false) localStorage.removeItem("auth");
+  }, [auth]);
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ auth, setAuth, loading }}>
       {children}
     </AuthContext.Provider>
   );

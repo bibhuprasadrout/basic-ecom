@@ -1,7 +1,15 @@
+import { Outlet } from "react-router";
 import { useAuth } from "../../hooks";
 const AuthUser = () => {
-  const value = useAuth();
-  const userAuthorized = value.value || "yet to assign";
-  console.log(userAuthorized);
+  const authStatus = useAuth();
+  return (
+    <div>
+      {authStatus?.auth ? (
+        <Outlet />
+      ) : (
+        <div>You do not have permission to view this page.</div>
+      )}
+    </div>
+  );
 };
 export default AuthUser;

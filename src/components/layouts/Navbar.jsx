@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { NavLink, Link } from "react-router";
+import { NavLink, Link, useNavigate } from "react-router";
 import axios from "axios";
 import { BASE_URL } from "../../config/Constants";
 import { useDispatch } from "react-redux";
 import { setCategories as setCategoriesAction } from "../../utils/slices/categoriesSlice";
+import { useAuth } from "../../hooks";
 
 const Navbar = () => {
+  const authValues = useAuth();
+  const { auth, setAuth } = authValues;
   const dispatch = useDispatch();
-  const [visitor, setVisitor] = useState(false);
-  () => setVisitor(true);
-
   const [categories, setCategories] = useState([]);
   const getCategorieslist = async () => {
     // TODO: Later we need to optimize the code of API calls, there is no eed to code axios in every pagewhere i sould call an API, make a api constructor function where i need to only pass method and data.
@@ -32,6 +32,22 @@ const Navbar = () => {
     const data = getCategorieslist();
     setCategories(data);
   }, []);
+
+  const navigate = useNavigate();
+  const handleSignout = async () => {
+    try {
+      const res = await axios({
+        method: "post",
+        baseURL: BASE_URL,
+        url: "logout",
+      });
+      res.data.success ? setAuth(() => false) : setAuth((prev) => prev);
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
       {/* Navbar */}
@@ -98,14 +114,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {visitor ? (
-            /* Sign up button */
-            <div className='navbar-end'>
-              <Link to='/signup' className='btn'>
-                Sign Up`
-              </Link>
-            </div>
-          ) : (
+          {auth ? (
             /* Profile feature */
             <div className='dropdown dropdown-end'>
               <div
@@ -132,9 +141,21 @@ const Navbar = () => {
                   <a>Settings</a>
                 </li>
                 <li>
-                  <Link to='/home'>Sign out</Link>
+                  <Link onClick={handleSignout}>Sign out</Link>
                 </li>
               </ul>
+            </div>
+          ) : (
+            <div className='navbar-end gap-3'>
+              {/* Sign up button */}
+              <Link to='/signup' className='btn btn-secondary'>
+                Sign Up
+              </Link>
+
+              {/* Sign up button */}
+              <Link to='/signin' className='btn btn-outline btn-accent'>
+                Sign In
+              </Link>
             </div>
           )}
         </div>
