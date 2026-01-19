@@ -1,5 +1,10 @@
 import PropsTypes from "prop-types";
+import { useNavigate } from "react-router";
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+  const navigateToProductPage = () => {
+    navigate(`products/${product._id}`);
+  };
   return (
     // <div key={product._id} className='carousel-item shrink-0 p-1'>
     //   <div className='card bg-base-100 shadow-md rounded-field min-w-90 max-w-90'>
@@ -59,7 +64,10 @@ const ProductCard = ({ product }) => {
     //     </div>
     //   </div>
     // </div>
-    <div key={product._id} className='carousel-item shrink-0 px-1 sm:px-2'>
+    <div
+      key={product._id}
+      className='carousel-item shrink-0 px-1 sm:px-2'
+      onClick={navigateToProductPage}>
       <div
         className='card bg-base-100 shadow-md rounded-field
       w-[160px] h-[260px]
@@ -125,7 +133,7 @@ const ProductCard = ({ product }) => {
           {/* CTA */}
           <div className='card-actions justify-end'>
             <button className='btn btn-primary btn-xs sm:btn-sm'>
-              Buy Now
+              Add to cart
             </button>
           </div>
         </div>

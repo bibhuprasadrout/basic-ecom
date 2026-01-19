@@ -8,6 +8,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/v1": "http://localhost:3000",
+      // "/cdn": {
+      //   target: "https://cdn.dummyjson.com",
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/cdn/, ""),
+      // },
     },
   },
 });
