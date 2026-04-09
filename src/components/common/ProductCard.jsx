@@ -1,81 +1,27 @@
 import PropsTypes from "prop-types";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import AddToCartButton from "./AddToCartButton";
+
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+
   const navigateToProductPage = () => {
     navigate(`products/${product._id}`);
   };
+
   return (
-    // <div key={product._id} className='carousel-item shrink-0 p-1'>
-    //   <div className='card bg-base-100 shadow-md rounded-field min-w-90 max-w-90'>
-    //     {/* thumbnail */}
-    //     <figure className='bg-inherit'>
-    //       <img
-    //         src={product.thumbnail}
-    //         alt={`${product.title} card thumbnail`}
-    //         className='w-full h-70 object-cover'
-    //         draggable={false}
-    //       />
-    //     </figure>
-    //     {/* card body with all card information */}
-    //     <div className='card-body  bg-base-100 rounded-2xl'>
-    //       <h2 className='card-title'>{product.title}</h2>
-
-    //       {/* star rating */}
-    //       <div className='relative flex w-30 max-w-30'>
-    //         <div
-    //           className={`absolute right-0 top-0 h-full bg-base-100`}
-    //           style={{
-    //             width: `${Math.floor(100 - product.rating * 20)}%`,
-    //           }}></div>
-    //         {[...Array(5)].map((_, index) => (
-    //           <p key={index} className='stars'>
-    //             <svg
-    //               width='24'
-    //               height='24'
-    //               viewBox='0 0 24 24'
-    //               fill='gold'
-    //               xmlns='http://www.w3.org/2000/svg'>
-    //               <path d='M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z' />
-    //             </svg>
-    //           </p>
-    //         ))}
-    //       </div>
-
-    //       {/* price */}
-    //       <div className='text-4xl'>{`$${product.price}`}</div>
-
-    //       {/* orginal price and discount */}
-    //       <div className=''>
-    //         <span className='line-through'>{`price: $${
-    //           Math.floor(
-    //             (product.price +
-    //               Math.floor(product.discountPercentage * product.price) /
-    //                 100) *
-    //               100
-    //           ) / 100
-    //         }`}</span>
-    //         <span className='text-lg text-info p-3'>{`${product.discountPercentage}% discount`}</span>
-    //       </div>
-    //       {/* <p>{product.description}</p> */}
-    //       <div className='card-actions justify-end'>
-    //         <button className='btn btn-primary btn-xl'>Buy Now</button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
     <div
       key={product._id}
       className='carousel-item shrink-0 px-1 sm:px-2'
       onClick={navigateToProductPage}>
       <div
         className='card bg-base-100 shadow-md rounded-field
-      w-[160px] h-[260px]
-      sm:w-[200px] sm:h-[320px]
-      md:w-[260px] md:h-[400px]
-      lg:w-[320px] lg:h-[500px]
-      xl:w-[360px] xl:h-[560px]
-      transition-all duration-300'>
+        w-40 h-65
+        sm:w-50 sm:h-80
+        md:w-65 md:h-100
+        lg:w-[320px] lg:h-125
+        xl:w-90 xl:h-140
+        transition-all duration-300'>
         {/* Thumbnail */}
         <figure className='h-[55%]'>
           <img
@@ -122,7 +68,7 @@ const ProductCard = ({ product }) => {
                   (product.price +
                     Math.floor(product.discountPercentage * product.price) /
                       100) *
-                    100
+                    100,
                 ) / 100
               }`}
             </span>
@@ -131,11 +77,7 @@ const ProductCard = ({ product }) => {
             </span>
           </div>
           {/* CTA */}
-          <div className='card-actions justify-end'>
-            <button className='btn btn-primary btn-xs sm:btn-sm'>
-              Add to cart
-            </button>
-          </div>
+          <AddToCartButton styles={"btn-xs sm:btn-sm"} product={product} />
         </div>
       </div>
     </div>

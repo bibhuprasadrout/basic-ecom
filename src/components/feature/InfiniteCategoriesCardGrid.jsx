@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import CategoryCard from "../../components/common/CategoryCard";
+import CategoryCard from "../common/CategoryCard";
 
 const InfiniteCategoriesCardGrid = () => {
   // extracting the categories value from categories slice
   const categories = useSelector((state) => state.categories.value);
 
-  const [visibleCardsCount, setVisibleCardsCount] = useState(10); // number of cards visible in view port.
+  const [visibleCardsCount, setVisibleCardsCount] = useState(11); // number of cards visible in view port.
   const observer = useRef(null);
 
   const categoriesRef = useRef(categories);
@@ -23,8 +23,8 @@ const InfiniteCategoriesCardGrid = () => {
       if (entries[0].isIntersecting) {
         setVisibleCardsCount((prev) =>
           categoriesRef.current.length > 0
-            ? Math.min(categoriesRef.current.length, prev + 10)
-            : prev
+            ? Math.min(categoriesRef.current.length, prev + 11)
+            : prev,
         );
       }
     });
@@ -50,14 +50,14 @@ const InfiniteCategoriesCardGrid = () => {
         {/*  */}
         {/* cards array */}
         {categories.length > 0 &&
-          categories.slice(0, visibleCardsCount).map((categoryItem, index) => {
+          categories.slice(0, visibleCardsCount).map((category, index) => {
             const isSentinel = index === visibleCardsCount - 1; // isSential is a boolean and will only be true for the last visible card
             return (
               <div key={index} ref={isSentinel ? loaderRef : null}>
                 {/*  */}
                 {/*  */}
                 {/* just the card nothing to do with the infinite card logic */}
-                <CategoryCard category={categoryItem} />
+                <CategoryCard category={category} />
                 {/*  */}
               </div>
             );

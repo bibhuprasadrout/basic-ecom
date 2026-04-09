@@ -1,12 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { BASE_URL } from "../config/Constants";
-import { downArrow } from "../assets";
+import { useHoverMedia } from "../hooks";
+import { AddToCartButton, ProductQuantityWheelHorizontal } from "../components";
 
 const Product = () => {
-  const [productImages, setProductImages] = useState([]);
+  const [productImages, setProductImages] = useState([]); // this state handles the images that once they are fetched using the fetchProductById function.
+  const [activeImageIndex, setActiveImageIndex] = useState(0); // this state manages which image should be the main image among th thumbnails in the product image gallary of the page.
   const [product, setProduct] = useState({});
+  const [productCount, setProductCount] = useState(1);
+  const canHover = useHoverMedia();
   const { id } = useParams();
   const fetchProductById = async (productId) => {
     try {
@@ -18,31 +22,69 @@ const Product = () => {
       setProduct(() => res.data?.data);
       setProductImages(() => res.data?.data?.images);
     } catch (err) {
-      console.log(err);
+      console.log("error fetching product:", err);
     }
   };
   useEffect(() => {
     fetchProductById(id);
   }, []);
-  console.log("product:", product);
 
   return (
     <div>
       <div className='h-12'></div>
-      <div className='flex flex-col sm:flex-row gap-3 min-h-screen w-full max-w-364 pt-1 pb-11'>
+      <div className='flex flex-col sm:flex-row gap-3 min-h-screen w-full max-w-364 pt-1 pb-11 m-auto'>
         {/* product images */}
-        <div className='inline-flex w-1/4 h-screen max-h-164 justify-center items-start z-10 mr-3'>
-          <div className='min-w-100 max-w-120 focus:outline-none'>
-            {productImages.length > 1 ? (
-              <figure className='hover-gallery w-full max-w-120 focus:outline-none'>
-                {productImages.map((imgString, index) => {
-                  return <img key={index} src={imgString} loading='eager' />;
-                })}
-              </figure>
-            ) : (
-              <img src={productImages[0]} />
-            )}
-          </div>
+        {/* Main wrapper: You can adjust the width (e.g., w-full md:w-1/2 lg:w-1/3) based on your grid */}
+        <div className='flex flex-col gap-4 w-full max-w-md'>
+          {/* --- MAIN IMAGE DISPLAY --- */}
+          {/* aspect-square ensures the box stays a perfect square so the layout doesn't jump around when clicking differently sized images */}
+          {!productImages || productImages.length === 0 ? (
+            <div className='p-4 bg-base-200 rounded-lg'>No image available</div>
+          ) : (
+            <div className='w-full aspect-square bg-base-100 border border-base-200 rounded-xl overflow-hidden flex items-center justify-center'>
+              <img
+                src={productImages[activeImageIndex]}
+                alt={`Product view ${activeImageIndex + 1}`}
+                // object-contain ensures the whole image is visible without stretching or cropping
+                className='w-full h-full object-contain'
+              />
+            </div>
+          )}
+          {/* --- THUMBNAIL ROW --- */}
+          {/* Only show thumbnails if there is more than 1 image */}
+          {productImages.length > 1 && (
+            <div className='flex gap-3 overflow-x-auto py-2 px-1 hide-scrollbar'>
+              {productImages.map((imgString, index) => {
+                const isActive = activeImageIndex === index;
+
+                return (
+                  <button
+                    key={index}
+                    // Update the main image when a thumbnail is clicked
+                    onClick={() => setActiveImageIndex(index)}
+                    // // If they have a mouse, attach the hover event. Otherwise, do nothing.
+                    onMouseEnter={
+                      canHover ? () => setActiveImageIndex(index) : undefined
+                    }
+                    className={`
+                      relative shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200
+                      ${
+                        isActive
+                          ? "border-primary shadow-md" // Active state: Highlighted with your daisyUI primary color
+                          : "border-base-300 opacity-70 hover:opacity-100 hover:border-base-content/50" // Inactive state
+                      }
+                    `}>
+                    <img
+                      src={imgString}
+                      alt={`Thumbnail ${index + 1}`}
+                      // object-cover is good for thumbnails so they fill the square perfectly
+                      className='w-full h-full object-cover bg-base-100'
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
         {/* product information */}
         <div className='inline-flex flex-col gap-3 w-2/4 h-fit z-20'>
@@ -99,14 +141,13 @@ const Product = () => {
               }`}
             </span>
           </div>
-          <div className='text-sm text-neutral-400'>
+          <div className='text-sm text-base-content/70'>
             Eligible for {product.returnPolicy}
           </div>
           {/* information table */}
-          <div
-            tabIndex={0}
-            className='collapse collapse-arrow bg-base-100 border-base-300 border rounded-md'>
-            <div className='collapse-title text-xl font-bold after:start-5 after:end-auto pe-4 ps-12 '>
+          <div className='collapse collapse-arrow bg-base-100 border-base-300 border rounded-md'>
+            <input type='checkbox' />
+            <div className='collapse-title text-xl font-bold after:inset-s-5 after:end-auto pe-4 ps-12 '>
               About this item
             </div>
             <div className='collapse-content text-sm h-fit'>
@@ -163,41 +204,35 @@ const Product = () => {
           </div>
         </div>
         {/* product related user actions */}
-        <div className='inline-flex flex-col gap-3 w-1/4 h-screen max-h-120 bg-blue'>
-          <div className='card w-full bg-base-100 border-1'>
+        <div className='inline-flex flex-col gap-3 w-1/4 h-screen max-h-120'>
+          <div className='card w-full bg-base-100 border border-base-300'>
             <div className='card-body'>
               <div className='text-4xl'>$ {product?.price}</div>
-              <div className='text-md text-neutral-400'>
+              <div className='text-md text-base-content/70'>
                 Must purchase a minimum order quantity of{" "}
                 {product.minimumOrderQuantity}
               </div>
-              <div className='text-sm font-bold text-red-700 py-3'>
+              <div className='text-sm font-bold text-error py-3'>
                 Usually {product.shippingInformation}
               </div>
-              <div className='dropdown'>
-                <label
-                  tabIndex={0}
-                  role='button'
-                  className='btn rounded-lg w-full flex justify-between'>
-                  Quantity <img className='size-7' src={downArrow} />
-                </label>
-                <ul
-                  tabIndex={0}
-                  className='dropdown-content menu bg-base-200 rounded-lg z-1 w-full max-h-40 overflow-y-auto p-2 shadow-sm flex flex-col flex-nowrap'>
-                  {Array.from({ length: 100 }).map((_, i) => (
-                    <li key={i} className='p-1 w-full'>
-                      <a className='flex justify-center w-full'>{i + 1}</a>
-                    </li>
-                  ))}
-                </ul>
+
+              {/* --- NEW APPLE-STYLE QUANTITY PICKER --- */}
+              <div className='flex flex-col gap-2 w-full'>
+                <span className='text-sm font-semibold text-base-content/70'>
+                  Quantity:
+                </span>
+                <ProductQuantityWheelHorizontal
+                  value={productCount}
+                  onChange={setProductCount}
+                />
               </div>
 
+              {/* CTA */}
               <div className='mt-1'>
-                <button
-                  className='btn btn-primary btn-block'
-                  disabled={!(product?.availabilityStatus === "In Stock")}>
-                  Add to cart
-                </button>
+                <AddToCartButton
+                  styles={"btn btn-primary btn-block"}
+                  product={product}
+                />
               </div>
             </div>
           </div>
@@ -248,293 +283,6 @@ export default Product;
 // import JSZip from "jszip";
 // import { saveAs } from "file-saver";
 //   const productsImages = [
-//     "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp",
-//     "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/1.webp",
-//     "https://cdn.dummyjson.com/product-images/beauty/powder-canister/1.webp",
-//     "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/1.webp",
-//     "https://cdn.dummyjson.com/product-images/beauty/red-nail-polish/1.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/1.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/2.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/3.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/1.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/2.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/3.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/1.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/2.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/3.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/1.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/2.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/3.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/1.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/2.webp",
-//     "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/3.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/1.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/2.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-bed/3.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/1.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/2.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/annibale-colombo-sofa/3.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/1.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/2.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/bedside-table-african-cherry/3.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/1.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/2.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/knoll-saarinen-executive-conference-chair/3.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/1.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/2.webp",
-//     "https://cdn.dummyjson.com/product-images/furniture/wooden-bathroom-sink-with-mirror/3.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/apple/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/beef-steak/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/cat-food/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/chicken-meat/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/chicken-meat/2.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/cooking-oil/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/cucumber/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/dog-food/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/eggs/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/fish-steak/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/green-bell-pepper/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/green-chili-pepper/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/honey-jar/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/ice-cream/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/ice-cream/2.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/ice-cream/3.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/ice-cream/4.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/juice/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/kiwi/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/lemon/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/milk/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/mulberry/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/nescafe-coffee/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/potatoes/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/protein-powder/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/red-onions/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/rice/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/soft-drinks/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/strawberry/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/tissue-paper-box/1.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/tissue-paper-box/2.webp",
-//     "https://cdn.dummyjson.com/product-images/groceries/water/1.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/1.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/2.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/decoration-swing/3.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/family-tree-photo-frame/1.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/1.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/2.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/house-showpiece-plant/3.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/1.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/2.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/3.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/plant-pot/4.webp",
-//     "https://cdn.dummyjson.com/product-images/home-decoration/table-lamp/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/bamboo-spatula/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-aluminium-cup/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-aluminium-cup/2.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/black-whisk/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/2.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/3.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/boxed-blender/4.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/carbon-steel-wok/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/chopping-board/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/citrus-squeezer-yellow/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/egg-slicer/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/2.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/3.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/electric-stove/4.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/fine-mesh-strainer/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/fork/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/glass/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/grater-black/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/hand-blender/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/ice-cube-tray/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/kitchen-sieve/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/knife/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/lunch-box/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/2.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/3.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/microwave-oven/4.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/mug-tree-stand/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/mug-tree-stand/2.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/pan/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/plate/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/red-tongs/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/silver-pot-with-glass-cap/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/slotted-turner/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/spice-rack/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/spoon/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/tray/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/wooden-rolling-pin/1.webp",
-//     "https://cdn.dummyjson.com/product-images/kitchen-accessories/yellow-peeler/1.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/1.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/2.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/3.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/1.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/2.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/asus-zenbook-pro-dual-screen-laptop/3.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/1.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/2.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/3.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/1.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/2.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/lenovo-yoga-920/3.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/1.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/2.webp",
-//     "https://cdn.dummyjson.com/product-images/laptops/new-dell-xps-13-9300-laptop/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/blue-&-black-check-shirt/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/gigabyte-aorus-men-tshirt/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/man-plaid-shirt/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/man-short-sleeve-shirt/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shirts/men-check-shirt/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/nike-air-jordan-1-red-and-black/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/nike-baseball-cleats/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/puma-future-rider-trainers/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-&-red/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-shoes/sports-sneakers-off-white-red/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/brown-leather-belt-watch/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-date-black-dial/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-cellini-moonphase/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-datejust/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mens-watches/rolex-submariner-watch/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpower-wireless-charger/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-homepod-mini-cosmic-grey/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-iphone-charger/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-iphone-charger/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-magsafe-battery-pack/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-magsafe-battery-pack/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-watch-series-4-gold/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-watch-series-4-gold/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/apple-watch-series-4-gold/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/beats-flex-wireless-earphones/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/iphone-12-silicone-case-with-magsafe-plum/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/iphone-12-silicone-case-with-magsafe-plum/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/iphone-12-silicone-case-with-magsafe-plum/3.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/iphone-12-silicone-case-with-magsafe-plum/4.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/monopod/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/monopod/2.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/selfie-lamp-with-iphone/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/selfie-stick-monopod/1.webp",
-//     "https://cdn.dummyjson.com/product-images/mobile-accessories/tv-studio-camera-pedestal/1.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/generic-motorcycle/1.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/generic-motorcycle/2.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/generic-motorcycle/3.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/generic-motorcycle/4.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/kawasaki-z800/1.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/kawasaki-z800/2.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/kawasaki-z800/3.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/kawasaki-z800/4.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/motogp-ci.h1/1.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/motogp-ci.h1/2.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/motogp-ci.h1/3.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/motogp-ci.h1/4.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/scooter-motorcycle/1.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/scooter-motorcycle/2.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/scooter-motorcycle/3.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/scooter-motorcycle/4.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/sportbike-motorcycle/1.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/sportbike-motorcycle/2.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/sportbike-motorcycle/3.webp",
-//     "https://cdn.dummyjson.com/product-images/motorcycle/sportbike-motorcycle/4.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/attitude-super-leaves-hand-soap/1.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/attitude-super-leaves-hand-soap/2.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/attitude-super-leaves-hand-soap/3.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/olay-ultra-moisture-shea-butter-body-wash/1.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/olay-ultra-moisture-shea-butter-body-wash/2.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/olay-ultra-moisture-shea-butter-body-wash/3.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/vaseline-men-body-and-face-lotion/1.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/vaseline-men-body-and-face-lotion/2.webp",
-//     "https://cdn.dummyjson.com/product-images/skin-care/vaseline-men-body-and-face-lotion/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-5s/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-5s/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-5s/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-6/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-6/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-6/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-x/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-x/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/iphone-x/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-a57/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-a57/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-a57/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-f19-pro-plus/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-f19-pro-plus/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-f19-pro-plus/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-k1/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-k1/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-k1/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/oppo-k1/4.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-c35/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-c35/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-c35/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-x/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-x/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-x/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-xt/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-xt/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/realme-xt/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s7/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s7/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s7/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s8/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s8/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s8/3.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s10/1.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s10/2.webp",
-//     "https://cdn.dummyjson.com/product-images/smartphones/samsung-galaxy-s10/3.webp",
 //     "https://cdn.dummyjson.com/product-images/smartphones/vivo-s1/1.webp",
 //     "https://cdn.dummyjson.com/product-images/smartphones/vivo-s1/2.webp",
 //     "https://cdn.dummyjson.com/product-images/smartphones/vivo-s1/3.webp",
@@ -544,27 +292,9 @@ export default Product;
 //     "https://cdn.dummyjson.com/product-images/smartphones/vivo-x21/1.webp",
 //     "https://cdn.dummyjson.com/product-images/smartphones/vivo-x21/2.webp",
 //     "https://cdn.dummyjson.com/product-images/smartphones/vivo-x21/3.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/american-football/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/baseball-ball/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/baseball-glove/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/baseball-glove/2.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/baseball-glove/3.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/basketball/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/basketball-rim/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-ball/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-bat/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/2.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/3.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/4.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-wicket/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/feather-shuttlecock/1.webp",
 //     "https://cdn.dummyjson.com/product-images/sports-accessories/football/1.webp",
 //     "https://cdn.dummyjson.com/product-images/sports-accessories/golf-ball/1.webp",
 //     "https://cdn.dummyjson.com/product-images/sports-accessories/iron-golf/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/metal-baseball-bat/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/tennis-ball/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sports-accessories/tennis-racket/1.webp",
 //     "https://cdn.dummyjson.com/product-images/sports-accessories/volleyball/1.webp",
 //     "https://cdn.dummyjson.com/product-images/sunglasses/black-sun-glasses/1.webp",
 //     "https://cdn.dummyjson.com/product-images/sunglasses/black-sun-glasses/2.webp",
@@ -572,118 +302,6 @@ export default Product;
 //     "https://cdn.dummyjson.com/product-images/sunglasses/classic-sun-glasses/1.webp",
 //     "https://cdn.dummyjson.com/product-images/sunglasses/classic-sun-glasses/2.webp",
 //     "https://cdn.dummyjson.com/product-images/sunglasses/classic-sun-glasses/3.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/green-and-black-glasses/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/green-and-black-glasses/2.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/green-and-black-glasses/3.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/party-glasses/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/party-glasses/2.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/party-glasses/3.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/sunglasses/1.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/sunglasses/2.webp",
-//     "https://cdn.dummyjson.com/product-images/sunglasses/sunglasses/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/ipad-mini-2021-starlight/1.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/ipad-mini-2021-starlight/2.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/ipad-mini-2021-starlight/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/ipad-mini-2021-starlight/4.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-s8-plus-grey/1.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-s8-plus-grey/2.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-s8-plus-grey/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-s8-plus-grey/4.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-white/1.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-white/2.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-white/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-white/4.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/blue-frock/1.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/blue-frock/2.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/blue-frock/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/blue-frock/4.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/girl-summer-dress/1.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/girl-summer-dress/2.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/girl-summer-dress/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/girl-summer-dress/4.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/gray-dress/1.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/gray-dress/2.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/gray-dress/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/gray-dress/4.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/short-frock/1.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/short-frock/2.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/short-frock/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/short-frock/4.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/tartan-dress/1.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/tartan-dress/2.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/tartan-dress/3.webp",
-//     "https://cdn.dummyjson.com/product-images/tops/tartan-dress/4.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/300-touring/1.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/300-touring/2.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/300-touring/3.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/300-touring/4.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/300-touring/5.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/300-touring/6.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/charger-sxt-rwd/1.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/charger-sxt-rwd/2.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/charger-sxt-rwd/3.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/charger-sxt-rwd/4.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/charger-sxt-rwd/5.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/charger-sxt-rwd/6.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/dodge-hornet-gt-plus/1.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/dodge-hornet-gt-plus/2.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/dodge-hornet-gt-plus/3.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/dodge-hornet-gt-plus/4.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/dodge-hornet-gt-plus/5.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/dodge-hornet-gt-plus/6.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/durango-sxt-rwd/1.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/durango-sxt-rwd/2.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/durango-sxt-rwd/3.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/durango-sxt-rwd/4.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/durango-sxt-rwd/5.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/durango-sxt-rwd/6.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/pacifica-touring/1.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/pacifica-touring/2.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/pacifica-touring/3.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/pacifica-touring/4.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/pacifica-touring/5.webp",
-//     "https://cdn.dummyjson.com/product-images/vehicle/pacifica-touring/6.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/blue-women's-handbag/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/blue-women's-handbag/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/blue-women's-handbag/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/heshe-women's-leather-bag/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/heshe-women's-leather-bag/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/heshe-women's-leather-bag/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/prada-women-bag/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/prada-women-bag/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/prada-women-bag/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/white-faux-leather-backpack/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/white-faux-leather-backpack/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/white-faux-leather-backpack/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/women-handbag-black/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/women-handbag-black/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-bags/women-handbag-black/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/black-women's-gown/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/black-women's-gown/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/black-women's-gown/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/black-women's-gown/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/corset-leather-with-skirt/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/corset-leather-with-skirt/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/corset-leather-with-skirt/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/corset-leather-with-skirt/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/corset-with-black-skirt/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/corset-with-black-skirt/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/corset-with-black-skirt/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/corset-with-black-skirt/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/dress-pea/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/dress-pea/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/dress-pea/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/dress-pea/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/marni-red-&-black-suit/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/marni-red-&-black-suit/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/marni-red-&-black-suit/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-dresses/marni-red-&-black-suit/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-jewellery/green-crystal-earring/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-jewellery/green-crystal-earring/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-jewellery/green-crystal-earring/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-jewellery/green-oval-earring/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-jewellery/green-oval-earring/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-jewellery/green-oval-earring/3.webp",
 //     "https://cdn.dummyjson.com/product-images/womens-jewellery/tropical-earring/1.webp",
 //     "https://cdn.dummyjson.com/product-images/womens-jewellery/tropical-earring/2.webp",
 //     "https://cdn.dummyjson.com/product-images/womens-jewellery/tropical-earring/3.webp",
@@ -695,33 +313,9 @@ export default Product;
 //     "https://cdn.dummyjson.com/product-images/womens-shoes/calvin-klein-heel-shoes/2.webp",
 //     "https://cdn.dummyjson.com/product-images/womens-shoes/calvin-klein-heel-shoes/3.webp",
 //     "https://cdn.dummyjson.com/product-images/womens-shoes/calvin-klein-heel-shoes/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/golden-shoes-woman/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/golden-shoes-woman/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/golden-shoes-woman/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/golden-shoes-woman/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/pampi-shoes/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/pampi-shoes/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/pampi-shoes/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/pampi-shoes/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/red-shoes/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/red-shoes/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/red-shoes/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-shoes/red-shoes/4.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/iwc-ingenieur-automatic-steel/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/iwc-ingenieur-automatic-steel/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/iwc-ingenieur-automatic-steel/3.webp",
 //     "https://cdn.dummyjson.com/product-images/womens-watches/rolex-cellini-moonphase/1.webp",
 //     "https://cdn.dummyjson.com/product-images/womens-watches/rolex-cellini-moonphase/2.webp",
 //     "https://cdn.dummyjson.com/product-images/womens-watches/rolex-cellini-moonphase/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/rolex-datejust-women/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/rolex-datejust-women/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/rolex-datejust-women/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/watch-gold-for-women/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/watch-gold-for-women/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/watch-gold-for-women/3.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/women's-wrist-watch/1.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/women's-wrist-watch/2.webp",
-//     "https://cdn.dummyjson.com/product-images/womens-watches/women's-wrist-watch/3.webp",
 //   ];
 
 //   async function downloadImages(productsImages) {

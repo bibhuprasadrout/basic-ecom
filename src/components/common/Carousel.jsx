@@ -81,65 +81,6 @@ const Carousel = (carouselProducts) => {
         </div>
       </div>
     </section>
-    // <section className='relative w-full'>
-    //   {/* <div className='w-full flex justify-center items-center'>
-    //     <div className='transform scale-50 origin-top w-full'> */}
-    //   <div className='flex justify-center items-center gap-4 w-[calc(100%-8px)] max-w-480 mx-auto'>
-    //     {/* Left Arrow */}
-    //     <a
-    //       onClick={() => scrollByCards(-2)}
-    //       className='btn btn-circle text-2xl font-bold outline-none focus:outline-none'>
-    //       <img
-    //         src={leftArror}
-    //         className='opacity-30'
-    //         alt='left carousel indicator arrow'
-    //       />
-    //     </a>
-
-    //     {/* Carousel */}
-    //     {/* TODO: More features to add fetch cards based on category and discount provided, also further the complexity by adding a price range the user wants to purchase within */}
-    //     {
-    //       // <div class="
-    //       // transform
-    //       // scale-75
-    //       // sm:scale-100
-    //       // hover:scale-110
-    //       // transition-transform
-    //       // duration-300
-    //       // origin-top-left
-    //       // ">
-    //     }
-    //     <div
-    //       ref={carouselRef}
-    //       className='carousel carousel-center overflow-x-auto scroll-smooth py-3 cursor-grab active:cursor-grabbing select-none w-full'
-    //       onMouseDown={handleMouseDown}
-    //       onMouseMove={handleMouseMove}
-    //       onMouseUp={handleMouseUp}
-    //       onMouseLeave={handleMouseLeave}>
-    //       {products.length > 0 &&
-    //         products.map((productForCard, index) => (
-    //           // The cards within the carousel
-    //           <ProductCard
-    //             key={productForCard?._id || index}
-    //             product={productForCard}
-    //           />
-    //         ))}
-    //     </div>
-
-    //     {/* Right Arrow */}
-    //     <a
-    //       onClick={() => scrollByCards(2)}
-    //       className='btn btn-circle text-2xl font-bold outline-none focus:outline-none grayscale-100'>
-    //       <img
-    //         src={rightArrow}
-    //         className='opacity-30'
-    //         alt='right carousel indicator arrow'
-    //       />
-    //     </a>
-    //   </div>
-    //   {/* </div>
-    //   </div> */}
-    // </section>
   );
 };
 
