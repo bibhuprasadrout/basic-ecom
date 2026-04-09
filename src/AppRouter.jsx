@@ -12,7 +12,7 @@ const Signup = lazy(() => import("./modules/auth/Signup"));
 const Product = lazy(() => import("./modules/Product"));
 const Products = lazy(() => import("./modules/Products"));
 const CartPage = lazy(() => import("./modules/CartPage"));
-const CheckoutPage = lazy(() => import("./modules/checkoutPage"));
+const CheckoutPage = lazy(() => import("./modules/CheckoutPage"));
 const Wishlist = lazy(() => import("./modules/Wishlist"));
 const Home = lazy(() => import("./modules/home/Home"));
 const AboutUs = lazy(
