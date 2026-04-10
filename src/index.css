@@ -1,6 +1,27 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: bumblebee --default, halloween;
+  themes:
+    bumblebee --default,
+    halloween;
+}
+
+/* Custom Scrollbar Logic for DaisyUI Themes */
+.carousel::-webkit-scrollbar {
+  height: 5px;
+}
+
+.carousel::-webkit-scrollbar-track {
+  background: hsl(var(--b2)); /* Uses base-200 color of the current theme */
+  border-radius: 10px;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+  background: hsl(var(--p)); /* Uses primary color of the current theme */
+  border-radius: 10px;
+}
+
+.carousel::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--pf)); /* Uses primary-focus color */
 }
 
 /* Any custom CSS you have can go below this */

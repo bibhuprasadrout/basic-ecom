@@ -1,6 +1,5 @@
 import { Carousel, InfiniteCategoriesCardGrid } from "../../components";
 // import InfiniteCardGridByScrollDetection from "../components/common/InfiniteCardGridByScrollDetection";
-import { homeBanner } from "../../assets";
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -106,8 +105,7 @@ const Home = () => {
           <div className='flex-1 relative'>
             <div className='aspect-square max-w-md mx-auto rounded-2xl overflow-hidden shadow-2xl border-4 border-base-100'>
               <img
-                // src='https://images.unsplash.com/photo-1767216516661-deb40df6f489?w=800'
-                src={homeBanner}
+                src='https://res.cloudinary.com/dsk4p5j0o/image/upload/v1775823716/copy_of_man_and_son_wearing_cool_tees_b136cc.png'
                 alt='New Year Promo'
                 className='w-full h-full object-cover'
               />

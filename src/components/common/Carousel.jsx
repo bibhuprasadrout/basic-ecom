@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { leftArrow, rightArrow } from "../../assets";
 import ProductCard from "./ProductCard";
 
 const Carousel = (carouselProducts) => {
@@ -48,11 +47,24 @@ const Carousel = (carouselProducts) => {
         <div className='w-full'>
           <div className='flex justify-center items-center gap-2 sm:gap-4 w-full max-w-7xl mx-auto px-2'>
             {/* Left Arrow */}
-            <a
+            <button
               onClick={() => scrollByCards(-2)}
-              className='btn btn-circle bg-base-100 text-2xl font-bold outline-none focus:outline-none'>
-              <img src={leftArrow} className='opacity-30' alt='left' />
-            </a>
+              className='btn btn-circle btn-ghost bg-base-200/50 hover:bg-primary hover:text-primary-content border-none backdrop-blur-md transition-all duration-300 shadow-md group focus:outline-none'
+              aria-label='Scroll Left'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={2.5}
+                stroke='currentColor'
+                className='w-6 h-6 opacity-60 group-hover:opacity-100 transition-opacity'>
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M15.75 19.5 8.25 12l7.5-7.5'
+                />
+              </svg>
+            </button>
 
             {/* Carousel */}
             <div
@@ -72,11 +84,24 @@ const Carousel = (carouselProducts) => {
             </div>
 
             {/* Right Arrow */}
-            <a
+            <button
               onClick={() => scrollByCards(2)}
-              className='btn btn-circle bg-base-100 text-2xl font-bold outline-none focus:outline-none grayscale-100'>
-              <img src={rightArrow} className='opacity-30' alt='right' />
-            </a>
+              className='btn btn-circle btn-ghost bg-base-200/50 hover:bg-primary hover:text-primary-content border-none backdrop-blur-md transition-all duration-300 shadow-md group focus:outline-none'
+              aria-label='Scroll Right'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={2.5}
+                stroke='currentColor'
+                className='w-6 h-6 opacity-60 group-hover:opacity-100 transition-opacity'>
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='m8.25 4.5 7.5 7.5-7.5 7.5'
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>

@@ -38,9 +38,9 @@ const AddToCartButton = ({ styles, product }) => {
       {/* CTA */}
       <div className='card-actions justify-end'>
         <button
-          className={`btn ${isInCart ? "btn-secondary" : "btn-primary"} ${styles}`}
+          className={`btn ${auth && isInCart ? "btn-secondary" : "btn-primary"} ${styles}`}
           onClick={handleAddToCart}>
-          {isInCart ? "Go to cart" : "Add to cart"}
+          {auth && isInCart ? "Go to cart" : "Add to cart"}
         </button>
       </div>
     </>
