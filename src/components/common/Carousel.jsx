@@ -45,31 +45,10 @@ const Carousel = (carouselProducts) => {
     <section className='relative w-full'>
       <div className='w-full flex justify-center items-center'>
         <div className='w-full'>
-          <div className='flex justify-center items-center gap-2 sm:gap-4 w-full max-w-7xl mx-auto px-2'>
-            {/* Left Arrow */}
-            <button
-              onClick={() => scrollByCards(-2)}
-              className='btn btn-circle btn-ghost bg-base-200/50 hover:bg-primary hover:text-primary-content border-none backdrop-blur-md transition-all duration-300 shadow-md group focus:outline-none'
-              aria-label='Scroll Left'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={2.5}
-                stroke='currentColor'
-                className='w-6 h-6 opacity-60 group-hover:opacity-100 transition-opacity'>
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M15.75 19.5 8.25 12l7.5-7.5'
-                />
-              </svg>
-            </button>
-
-            {/* Carousel */}
+          <div className='flex flex-col min-[420px]:flex-row justify-center items-center gap-6 min-[420px]:gap-2 sm:gap-4 w-full max-w-7xl mx-auto px-2'>
             <div
               ref={carouselRef}
-              className='carousel carousel-center overflow-x-auto scroll-smooth py-3 cursor-grab active:cursor-grabbing select-none w-full'
+              className='carousel carousel-center overflow-x-auto scroll-smooth py-3 cursor-grab active:cursor-grabbing select-none w-full order-1 min-[420px]:order-2'
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
@@ -83,25 +62,47 @@ const Carousel = (carouselProducts) => {
                 ))}
             </div>
 
-            {/* Right Arrow */}
-            <button
-              onClick={() => scrollByCards(2)}
-              className='btn btn-circle btn-ghost bg-base-200/50 hover:bg-primary hover:text-primary-content border-none backdrop-blur-md transition-all duration-300 shadow-md group focus:outline-none'
-              aria-label='Scroll Right'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={2.5}
-                stroke='currentColor'
-                className='w-6 h-6 opacity-60 group-hover:opacity-100 transition-opacity'>
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='m8.25 4.5 7.5 7.5-7.5 7.5'
-                />
-              </svg>
-            </button>
+            <div className='flex flex-row items-center justify-center gap-12 min-[420px]:contents order-2 min-[420px]:order-0'>
+              {/* Left Arrow */}
+              <button
+                onClick={() => scrollByCards(-2)}
+                className='btn btn-circle btn-ghost bg-base-200/50 hover:bg-primary hover:text-primary-content border-none backdrop-blur-md transition-all duration-300 shadow-md group focus:outline-none min-[420px]:order-1'
+                aria-label='Scroll Left'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={2.5}
+                  stroke='currentColor'
+                  className='w-6 h-6 opacity-60 group-hover:opacity-100 transition-opacity'>
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M15.75 19.5 8.25 12l7.5-7.5'
+                  />
+                </svg>
+              </button>
+
+              {/* Right Arrow */}
+              <button
+                onClick={() => scrollByCards(2)}
+                className='btn btn-circle btn-ghost bg-base-200/50 hover:bg-primary hover:text-primary-content border-none backdrop-blur-md transition-all duration-300 shadow-md group focus:outline-none min-[420px]:order-3'
+                aria-label='Scroll Right'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={2.5}
+                  stroke='currentColor'
+                  className='w-6 h-6 opacity-60 group-hover:opacity-100 transition-opacity'>
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='m8.25 4.5 7.5 7.5-7.5 7.5'
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
