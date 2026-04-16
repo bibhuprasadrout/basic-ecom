@@ -18,4 +18,4 @@ export { default as ProductQuantityWheelHorizontal } from "./feature/ProductQuan
 
 export { default as Footer } from "./layouts/Footer";
 export { default as Navbar } from "./layouts/Navbar";
-export { default as RootlevelFallbackUi } from "./layouts/rootlevelFallbackUi";
+export { default as RootlevelFallbackUi } from "./layouts/RootlevelFallbackUi";
