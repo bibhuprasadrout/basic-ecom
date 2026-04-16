@@ -23,3 +23,13 @@
 .carousel::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--pf)); /* Uses primary-focus color */
 }
+
+/* Responsive override: hide scrollbar on small screens */
+@media (max-width: 724px) {
+  .carousel {
+    scrollbar-width: none; /* Firefox */
+  }
+  .carousel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+}
