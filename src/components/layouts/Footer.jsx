@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import CopyrightNotice from "../../modules/legal&CompanyInformation/CopyrightNotice";
 const Footer = () => {
   return (
     <footer className='w-full bg-base-200 text-base-content border-t border-base-300'>
@@ -67,27 +68,33 @@ const Footer = () => {
         {/* Middle Section: Navigation Links */}
         <div className='footer footer-center p-4 border-t border-base-300/50'>
           <nav className='flex flex-wrap gap-x-6 gap-y-2 justify-center font-medium'>
-            <Link to='aboutus' className='link link-hover hover:text-primary'>
+            <Link
+              to='legalAndCompanyInformation/aboutus'
+              className='link link-hover hover:text-primary'>
               About us
             </Link>
-            <Link to='contactus' className='link link-hover hover:text-primary'>
+            <Link
+              to='legalAndCompanyInformation/contactus'
+              className='link link-hover hover:text-primary'>
               Contact
             </Link>
             <Link
-              to='privacyPolicy'
+              to='legalAndCompanyInformation/privacyPolicy'
               className='link link-hover hover:text-primary'>
               Privacy policy
             </Link>
             <Link
-              to='refundPolicy'
+              to='legalAndCompanyInformation/refundPolicy'
               className='link link-hover hover:text-primary'>
               Refund policy
             </Link>
-            <Link to='team' className='link link-hover hover:text-primary'>
+            <Link
+              to='legalAndCompanyInformation/team'
+              className='link link-hover hover:text-primary'>
               Team
             </Link>
             <Link
-              to='termsOfService'
+              to='legalAndCompanyInformation/termsOfService'
               className='link link-hover hover:text-primary'>
               Terms of service
             </Link>
@@ -95,12 +102,7 @@ const Footer = () => {
         </div>
         {/* Bottom Section: Copyright */}
         <div className='footer footer-center p-4 pb-8 text-base-content/70'>
-          <aside>
-            <p>
-              Copyright © {new Date().getFullYear()} - All rights reserved by
-              basic-ecom
-            </p>
-          </aside>
+          <CopyrightNotice />
         </div>
       </div>
     </footer>

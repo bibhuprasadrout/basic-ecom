@@ -1,0 +1,29 @@
+/**
+ *
+ * *INFO*
+ * * TOPIC - Barrel files.
+ * * Barrel file - A barrel file is a way to re-export multiple modules from a single file, making imports cleaner and more organized.
+ * `export { default as Carousel } from "./common/Carousel";`
+ * * This way of importing and exporting in the same line without the need of an import statement and an intermediate variable is called "re-exporting".
+ * *It allows you to directly export a module from another file without having to import it first and then export it again. This is possible because we do not have any use for the Carousel variable in this file, we are just re-exporting it. If we had any use for the Carousel variable in this file, we would have to import it first and then export it.
+ *
+ */
+
+/**
+ *
+ *
+ * *INFO*
+ * `const dispatch = useDispatch();`
+ * * `dispatch` is a stable function extracted from the Redux store using the `useDispatch` hook. You use `dispatch` to send actions to the Redux store. These actions can be plain objects (for simple state updates) or functions (thunks for async operations).
+ *
+ *
+ */
+
+/**
+ *
+ *
+ * *INFO*
+ *
+ *
+ *
+ */

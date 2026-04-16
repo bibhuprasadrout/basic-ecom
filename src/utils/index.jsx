@@ -7,3 +7,4 @@ export {
   deleteCart,
   clearLocalCart,
 } from "./slices/cartSlice";
+export { default as request } from "./apiClient";

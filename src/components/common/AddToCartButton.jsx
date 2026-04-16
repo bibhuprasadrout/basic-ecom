@@ -7,8 +7,7 @@ import { useAuth } from "../../hooks";
 const AddToCartButton = ({ styles, product }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const authValues = useAuth();
-  const { auth } = authValues;
+  const { auth } = useAuth();
 
   // 1. Grab the cart items from Redux
   const cartItems = useSelector((state) => state.cart.data?.items || []);

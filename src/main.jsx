@@ -72,4 +72,7 @@ routing and app-wide context happens in `AppRouter`; page/layout components live
 
 // root.unmount();
 /*
-Unmounting is the opposite of mounting: it tells React to tear down the component tree, remove event listeners it added, and run cleanup functions from effects. Most SPAs never call `root.unmount()` because the app is expected to live for the whole lifetime of the browser tab. You would intentionally call it in special architectures such as micro-frontends (where an app is mounted/unmounted inside a host shell), integration tests (mount app, assert UI, unmount to isolate tests), or advanced tooling/hot-reload scenarios. Keeping this commented note here is fine as a learning aid, but it’s not required for normal operation. */
+Unmounting is the opposite of mounting: it tells React to tear down the component tree, remove event listeners it added, and run cleanup functions from effects.
+Most SPAs never call `root.unmount()` because the app is expected to live for the whole lifetime of the browser tab.
+Its intentionally called in special architectures such as micro-frontends (where an app is mounted/unmounted inside a host shell), integration tests (mount app, assert UI, unmount to isolate tests), or advanced tooling/hot-reload scenarios.
+*/

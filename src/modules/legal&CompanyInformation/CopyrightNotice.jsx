@@ -1,4 +1,13 @@
 const CopyrightNotice = () => {
-  "© 2026 basic.ecom";
+  return (
+    <>
+      <aside>
+        <p>
+          Copyright © {new Date().getFullYear()} - All rights reserved by
+          basic-ecom
+        </p>
+      </aside>
+    </>
+  );
 };
 export default CopyrightNotice;
