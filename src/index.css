@@ -26,10 +26,18 @@
 
 /* Responsive override: hide scrollbar on small screens */
 @media (max-width: 724px) {
-  .carousel {
+  body {
     scrollbar-width: none; /* Firefox */
   }
-  .carousel::-webkit-scrollbar {
+  body::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Edge */
+  }
+  body::-webkit-scrollbar-thumb {
+    display: none;
+    background: transparent;
+  }
+  body::-webkit-scrollbar-thumb:hover {
+    display: none;
+    background: transparent;
   }
 }
