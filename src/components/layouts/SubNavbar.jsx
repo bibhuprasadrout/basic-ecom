@@ -8,13 +8,16 @@ const SubNavbar = () => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     const getCategorieslist = async () => {
-      const { data, error } = await request("get", "categories");
-      if (data?.success) {
-        data?.data && setCategories(data?.data);
-        data?.data && dispatch(setCategoriesAction(data?.data));
-      } else {
+      const { data, error } = await request({
+        method: "get",
+        url: "categories",
+      });
+      if (error) {
         console.log("Error fetching categories:", error);
+        return;
       }
+      data?.data && setCategories(data?.data);
+      data?.data && dispatch(setCategoriesAction(data?.data));
     };
     getCategorieslist();
   }, [dispatch]);

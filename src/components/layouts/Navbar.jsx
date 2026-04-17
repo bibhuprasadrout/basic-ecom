@@ -44,13 +44,15 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   const handleSignout = async () => {
-    const { data, error } = await request("post", "logout");
-    if (data?.success) {
-      setAuth(() => false);
-      navigate("/", { replace: true });
-    } else {
+    const { error } = await request({
+      method: "post",
+      url: "logout",
+    });
+    if (error) {
       console.log("Error during signout:", error);
     }
+    setAuth(() => false);
+    navigate("/", { replace: true });
   };
 
   return (

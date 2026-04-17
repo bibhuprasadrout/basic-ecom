@@ -1,8 +1,9 @@
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../config/Constants";
+// import axios from "axios";
+// import { BASE_URL } from "../config/Constants";
+import { request } from "../utils";
 
 const INDIAN_STATES = [
   "Andhra Pradesh",
@@ -125,27 +126,43 @@ const CheckoutPage = () => {
       },
     };
 
-    try {
-      // Send address to our new backend endpoint
-      const res = await axios.post(
-        `${BASE_URL}/orders`,
-        { shippingAddress },
-        { withCredentials: true }, // Crucial for passing the JWT cookie
-      );
-
+    const setShippingAddress = async () => {
+      const { data, error } = await request({
+        method: "post",
+        url: "orders",
+        data: { shippingAddress },
+      });
+      if (error) {
+        setError(error || "Failed to save shipping information.");
+        console.log("Error during sending shipping address to backend:", error);
+      }
       // The backend returns the new pending Order ID.
-      const newOrderId = res.data.data._id;
-
+      const newOrderId = data.data._id;
       // Navigate to the (future) payment page, passing the orderId in the URL state
       navigate(`/payment/${newOrderId}`);
-    } catch (err) {
-      console.error(err);
-      setError(
-        err.response?.data?.message || "Failed to save shipping information.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    };
+    // try {
+    //   // Send address to our new backend endpoint
+    //   const res = await axios.post(
+    //     `${BASE_URL}/orders`,
+    //     { shippingAddress },
+    //     { withCredentials: true }, // Crucial for passing the JWT cookie
+    //   );
+
+    //   // The backend returns the new pending Order ID.
+    //   const newOrderId = res.data.data._id;
+
+    //   // Navigate to the (future) payment page, passing the orderId in the URL state
+    //   navigate(`/payment/${newOrderId}`);
+    // } catch (err) {
+    //   console.error(err);
+    //   setError(
+    //     err.response?.data?.message || "Failed to save shipping information.",
+    //   );
+    // } finally {
+    //   setIsLoading(false);
+    // }
+    setShippingAddress();
   };
 
   // Reusable CSS class to remove the glowing focus ring from DaisyUI/Tailwind

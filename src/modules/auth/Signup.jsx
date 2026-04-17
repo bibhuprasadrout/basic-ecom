@@ -47,7 +47,11 @@ const Signup = () => {
       return;
     }
 
-    const { data, error } = await request("post", "signup", visitor);
+    const { data, error } = await request({
+      method: "post",
+      url: "signup",
+      data: visitor,
+    });
     if (data?.success) {
       navigate("/signin", { replace: true });
     } else {

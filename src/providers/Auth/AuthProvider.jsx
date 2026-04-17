@@ -6,14 +6,17 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(() => {
-    return localStorage.getItem("auth") === "true"; // localstorage only stores string to get a bool we need to coerce it out like this line of code.
+    return localStorage.getItem("auth") === "true"; // localstorage only stores string, to get a bool we need to coerce it out like this line of code.
   });
 
   const [loading, setLoading] = useState(true);
 
   const validateToken = async () => {
     setLoading(true);
-    const { data, error } = await request("get", "auth/profile"); // This is a simple request to check if the user’s session is valid. The `request` function uses your pre-configured axios instance, which should include credentials (cookies) and the correct base URL. If the session is valid, we set `auth` to true; if it’s invalid (for example, the cookie is missing or expired), we catch the error and set `auth` to false. Finally, we set `loading` to false to indicate that auth status has been resolved.
+    const { data, error } = await request({
+      method: "get",
+      url: "auth/profile",
+    }); // This is a simple request to check if the user’s session is valid. The `request` function uses your pre-configured axios instance, which should include credentials (cookies) and the correct base URL. If the session is valid, we set `auth` to true; if it’s invalid (for example, the cookie is missing or expired), we catch the error and set `auth` to false. Finally, we set `loading` to false to indicate that auth status has been resolved.
     if (data?.success) {
       setAuth(() => !!data?.user);
       localStorage.setItem("auth", !!data?.user); // / !!data?.user is the same as doing data?.user != null. It converts the truthy/falsy value of data?.user into a strict boolean (true or false).

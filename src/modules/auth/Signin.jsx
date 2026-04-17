@@ -23,7 +23,11 @@ const Signin = () => {
       //   email: "boby@laso.com",
       //   password: "Bobylaso1!",
       // };
-      const { data, error } = await request("post", "signin", userData); // request(`axios` call) function uses `method: "post"` because credentials should not be placed in the URL (POST body is the standard approach).
+      const { data, error } = await request({
+        method: "post",
+        url: "signin",
+        data: userData,
+      }); // request(`axios` call) function uses `method: "post"` because credentials should not be placed in the URL (POST body is the standard approach).
       if (data?.success) {
         setAuth(true); // `setAuth(() => res.data.success)` updates your auth context so the rest of the app (Navbar, guards, etc.) can immediately reflect “logged in” state without a refresh.
         await dispatch(getCart());

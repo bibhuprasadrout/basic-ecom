@@ -1,3 +1,10 @@
+// #region
+// This is a single line comment. It’s useful for short notes or explanations that don’t require much detail. It can be placed anywhere in the code and is ignored by the JavaScript engine.
+// However single line comments can become cluttered if you have a lot of them, and they don’t support structured information like parameters or return types.
+// They are not collapsible in most code editors, so they can add visual noise if overused.
+// Using region comments (like `// #region` and `// #endregion`) can help organize code into collapsible sections, which is especially useful in large files. This allows developers to hide or show blocks of code, making it easier to navigate and focus on relevant parts. However, they are not a standard JavaScript feature and may not be supported in all editors or environments, so their usage should be consistent with the team’s coding standards.
+// #endregion
+
 // `useDispatch` is a React-Redux hook that gives you access to the Redux store’s `dispatch` function, which is how actions are sent to update global state in the redux store.
 
 // * useful information

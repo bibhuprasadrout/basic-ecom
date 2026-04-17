@@ -47,20 +47,41 @@ const apiClient = axios.create({
 // );
 
 /**
- * @param {String} method - 'get', 'post', 'put', 'patch', 'delete'
- * @param {String} url - The endpoint path
- * @param {Object} [data] - The request body (optional)
- * @param {Object} [params] - Query parameters (optional)
+ * Executes an API request using the configured axios instance.
+ * @param {Object} options - The request configuration object.
+ *  @param {('get'|'post'|'put'|'patch'|'delete')} options.method - The HTTP method to use.
+ *  @param {string} options.url - The endpoint path (relative to BASE_URL).
+ *  @param {Object} [options.data=null] - The request body for POST/PUT/PATCH requests.
+ *  @param {Object} [options.params=null] - Query parameters to be appended to the URL.
+ *  @param {boolean} [options.withCredentials=true] - Whether to include cookies in the request.
+ * @returns {Promise<{data: any, error: (string|null)}>} An object containing the response data or an error message.
  */
 
-const request = async (method, url, data = null, params = null) => {
+const request = async ({
+  method,
+  url,
+  data = null,
+  params = null,
+  withCredentials = true,
+}) => {
   try {
-    const response = await apiClient({
+    const config = {
       method: method.toLowerCase(),
       url,
-      data,
-      params,
-    });
+      withCredentials,
+    };
+
+    // * IMPORTANT: Always only send data or paramas if they are not null( infor that is needed/ wanted ), otherwise you might send an empty body or unwanted query string which can cause backend errors or unexpected behavior.
+    if (data !== null) {
+      config.data = data;
+    }
+
+    if (params !== null) {
+      config.params = params;
+    }
+
+    const response = await apiClient(config);
+
     return { data: response.data, error: null };
   } catch (error) {
     const message = error.response?.data?.message || "An error occurred";
