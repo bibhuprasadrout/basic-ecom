@@ -6,8 +6,8 @@ const StarIcon = ({ className = "", fillColor }) => (
   <svg
     width='16'
     height='16'
-    className={`w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 ${className}`}
-    fill={fillColor} // This is the secret to theme-ready colors
+    className={`w-3 h-3 sm:w-4 sm:h-4 ${className}`}
+    fill={fillColor}
     viewBox='0 0 24 24'>
     <path d='M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z' />
   </svg>
@@ -22,127 +22,50 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const navigateToProductPage = () => {
-    navigate(`products/${product._id}`);
+    navigate(`/products/${product._id}`);
   };
 
   return (
-    // <div
-    //   key={product._id}
-    //   className='carousel-item shrink-0 px-1 sm:px-2'
-    //   onClick={navigateToProductPage}>
-    //   <div
-    //     className='card bg-base-100 shadow-md rounded-field
-    //     w-40 h-65
-    //     sm:w-50 sm:h-80
-    //     md:w-65 md:h-100
-    //     lg:w-[320px] lg:h-125
-    //     xl:w-90 xl:h-140
-    //     transition-all duration-300'>
-    //     {/* Thumbnail */}
-    //     <figure className='h-[55%]'>
-    //       <img
-    //         src={product.thumbnail}
-    //         alt={`${product.title} thumbnail`}
-    //         className='w-full h-full object-cover rounded-t-field'
-    //         draggable={false}
-    //       />
-    //     </figure>
-    //     {/* Card Body */}
-    //     <div className='card-body h-[45%] flex flex-col justify-between gap-0 md:gap-2 p-2 sm:p-3'>
-    //       {/* Title */}
-    //       <h2 className='card-title text-xs sm:text-sm md:text-base lg:text-lg truncate'>
-    //         {product.title}
-    //       </h2>
-    //       {/* Star Rating */}
-    //       <div className='relative flex items-center gap-1 p-0'>
-    //         <div
-    //           className='absolute right-0 top-0 h-full bg-base-100'
-    //           style={{
-    //             width: `${Math.floor(100 - product.rating * 20)}%`,
-    //           }}></div>
-    //         {[...Array(5)].map((_, i) => (
-    //           <svg
-    //             key={i}
-    //             width='16'
-    //             height='16'
-    //             className='w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5'
-    //             fill='gold'
-    //             viewBox='0 0 24 24'>
-    //             <path d='M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z' />
-    //           </svg>
-    //         ))}
-    //       </div>
-    //       {/* Price */}
-    //       <div className='text-base sm:text-lg md:text-xl font-bold'>
-    //         {`$${product.price}`}
-    //       </div>
-    //       {/* Original Price & Discount */}
-    //       <div className='text-[10px] sm:text-xs md:text-sm flex items-center'>
-    //         <span className='line-through'>
-    //           {`$${
-    //             Math.floor(
-    //               (product.price +
-    //                 Math.floor(product.discountPercentage * product.price) /
-    //                   100) *
-    //                 100,
-    //             ) / 100
-    //           }`}
-    //         </span>
-    //         <span className='text-info pl-1 sm:pl-2'>
-    //           {`${product.discountPercentage}% off`}
-    //         </span>
-    //       </div>
-    //       {/* CTA */}
-    //       <AddToCartButton styles={"btn-xs sm:btn-sm"} product={product} />
-    //     </div>
-    //   </div>
-    // </div>
     <div
-      key={product._id}
-      className='carousel-item shrink-0 px-1 sm:px-2'
+      className='w-full px-1 py-2' // Removes fixed carousel-item width for grid flexibility
       onClick={navigateToProductPage}>
       <div
-        className='card bg-base-100 shadow-md rounded-field
-        border border-base-300/50 hover:border-primary
-        w-40 h-65
-        sm:w-50 sm:h-80
-        md:w-65 md:h-100
-        lg:w-[320px] lg:h-125
-        xl:w-90 xl:h-140
-        transition-all duration-300 hover:shadow-xl group'>
-        {/* Thumbnail */}
-        <figure className='h-[55%] overflow-hidden'>
+        className='card bg-base-100 shadow-sm rounded-xl border border-base-300/50
+        hover:border-primary transition-all duration-300 hover:shadow-md group
+        w-full h-full flex flex-col overflow-hidden cursor-pointer'>
+        {/* Thumbnail - Aspect Ratio Box */}
+        <figure className='relative aspect-square overflow-hidden bg-base-200'>
           <img
             src={product.thumbnail}
             alt={`${product.title} thumbnail`}
-            className='w-full h-full object-cover rounded-t-field transition-transform duration-500 group-hover:scale-105'
+            className='w-full h-full object-contain transition-transform duration-500 group-hover:scale-105'
             draggable={false}
           />
+          {product.discountPercentage > 10 && (
+            <div className='absolute top-2 left-2 badge badge-error badge-xs sm:badge-sm font-bold'>
+              -{Math.round(product.discountPercentage)}%
+            </div>
+          )}
         </figure>
 
         {/* Card Body */}
-        <div className='card-body h-[45%] flex flex-col justify-between gap-0 md:gap-2 p-2 sm:p-4'>
-          {/* Title */}
-          <h2 className='card-title text-xs sm:text-sm md:text-base lg:text-lg truncate text-base-content'>
+        <div className='p-2 sm:p-4 flex flex-col flex-grow gap-1 sm:gap-2'>
+          {/* Title - Line Clamp for 2-line wrapping */}
+          <h2
+            className='text-[13px] leading-tight sm:text-sm md:text-base font-medium
+            text-base-content line-clamp-2 h-8 sm:h-10 md:h-12 overflow-hidden'>
             {product.title}
           </h2>
 
-          {/* Star Rating - Theme Ready Logic */}
-          <div className='relative flex items-center gap-1 p-0'>
-            {/* We use a mask approach that works better with theme backgrounds than a solid div */}
-            <div className='relative flex gap-1 text-base-300'>
-              {/* Background Stars (Empty/Gray) */}
+          {/* Star Rating */}
+          <div className='flex items-center gap-1'>
+            <div className='relative flex gap-0.5 text-base-300'>
               {[...Array(5)].map((_, i) => (
-                <StarIcon key={i} fillColor='gray' />
+                <StarIcon key={i} fillColor='#D1D5DB' />
               ))}
-
-              {/* Overlapping Gold Stars (Filled) */}
               <div
-                className='absolute top-0 left-0 flex gap-1 text-warning overflow-hidden transition-all duration-1000'
-                style={{
-                  width: `${(product.rating / 5) * 100}%`,
-                  whiteSpace: "nowrap", // Prevents stars from wrapping to a new line when width is small
-                }}>
+                className='absolute top-0 left-0 flex gap-0.5 text-warning overflow-hidden'
+                style={{ width: `${(product.rating / 5) * 100}%` }}>
                 {[...Array(5)].map((_, i) => (
                   <StarIcon
                     key={i}
@@ -152,29 +75,27 @@ const ProductCard = ({ product }) => {
                 ))}
               </div>
             </div>
+            <span className='text-[10px] sm:text-xs opacity-60'>
+              ({product.rating})
+            </span>
           </div>
 
           {/* Price Section */}
-          <div className='flex flex-col'>
-            <div className='text-base sm:text-lg md:text-xl font-bold text-base-content'>
-              {`$${product.price}`}
-            </div>
-
-            {/* Original Price & Discount */}
-            <div className='text-[10px] sm:text-xs md:text-sm flex items-center flex-wrap'>
-              <span className='line-through opacity-50'>
-                {`$${((product.price * 100) / (100 - product.discountPercentage)).toFixed(2)}`}
+          <div className='mt-auto pt-1'>
+            <div className='flex items-baseline gap-1.5 flex-wrap'>
+              <span className='text-sm sm:text-lg font-bold text-base-content'>
+                {`$${product.price}`}
               </span>
-              <span className='text-success font-semibold pl-1 sm:pl-2'>
-                {`${Math.round(product.discountPercentage)}% off`}
+              <span className='text-[10px] sm:text-xs line-through opacity-40'>
+                {`$${((product.price * 100) / (100 - product.discountPercentage)).toFixed(2)}`}
               </span>
             </div>
           </div>
 
           {/* CTA */}
-          <div className='mt-2'>
+          <div className='mt-1 sm:mt-2' onClick={(e) => e.stopPropagation()}>
             <AddToCartButton
-              styles='btn-primary btn-xs sm:btn-sm btn-block no-animation'
+              styles='btn-primary btn-xs sm:btn-sm btn-block rounded-lg'
               product={product}
             />
           </div>
@@ -194,4 +115,5 @@ ProductCard.propTypes = {
     discountPercentage: PropsTypes.number,
   }),
 };
+
 export default ProductCard;

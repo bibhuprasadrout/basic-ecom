@@ -92,7 +92,7 @@ const Products = () => {
         {/* --- RESPONSIVE SIDEBAR --- */}
         <aside className='w-full lg:w-64 shrink-0'>
           {/* Mobile Filter Toggle (Visible only on small screens) */}
-          <div className='collapse collapse-arrow lg:collapse-open bg-base-200 lg:bg-transparent border border-base-300 lg:border-none rounded-box'>
+          <div className='collapse collapse-arrow lg:collapse-open bg-base-200 lg:bg-transparent border border-base-300 lg:border-none rounded-box py-3'>
             <input type='checkbox' className='lg:hidden' />
             <div className='collapse-title lg:hidden font-bold'>
               Filters & Categories
